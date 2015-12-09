@@ -82,7 +82,7 @@ public class MockMapLocation
      * @param other
      * @return
      */
-    public int	compareTo(MockMapLocation other)
+    public int compareTo(MockMapLocation other)
     {
         throw new Error("CompareTo on MockMapLocation not implemented");
     }
