@@ -1,5 +1,10 @@
 package Simulation;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class Main
 {
     /**
@@ -8,7 +13,18 @@ public class Main
      */
     public static void main(String[] args)
     {
+        double[][] inputs = new double[][]{
+                {
+                        0.0,
+                        1.1
+                },
+                {
+                        2.0,
+                        3.0
+                }
+        };
 
+        runFightSimulation(inputs, inputs);
     }
 
     /**
@@ -40,7 +56,7 @@ public class Main
     {
         Game game = new Game(team1Inputs, team2Inputs);
 
-        game.runMatch();
+        game.runMatch("FightMicroGA/Simulation/simulationMaps/onetower.xml");
 
         double[][][] results = new double[2][][];
 

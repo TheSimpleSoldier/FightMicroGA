@@ -9,11 +9,13 @@ public class MockRobotController implements RobotController
 {
     private Team team;
     private RobotType robotType;
+    private MapLocation location;
 
-    public MockRobotController(Team team, RobotType robotType)
+    public MockRobotController(Team team, RobotType robotType, MapLocation location)
     {
         this.team = team;
         this.robotType = robotType;
+        this.location = location;
     }
 
     /**
@@ -289,7 +291,7 @@ public class MockRobotController implements RobotController
      */
     public Team	getTeam()
     {
-        throw new Error("getTeam Not implemented");
+        return this.team;
     }
 
     /**
@@ -319,7 +321,7 @@ public class MockRobotController implements RobotController
      */
     public RobotType getType()
     {
-        throw new Error("getType Not implemented");
+        return this.robotType;
     }
 
     /**

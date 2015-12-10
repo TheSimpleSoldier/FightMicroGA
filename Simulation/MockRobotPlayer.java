@@ -1,8 +1,6 @@
 package Simulation;
 
-import battlecode.common.Direction;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 /**
  *
@@ -27,9 +25,64 @@ public abstract class MockRobotPlayer
     public MockRobotPlayer(RobotController robotController, double[][] weights)
     {
         this.rc = robotController;
-        this.target = rc.senseEnemyHQLocation();
+        //this.target = rc.senseEnemyHQLocation();
         this.weights = weights;
         dirs = Direction.values();
+    }
+
+    public char getTypeLetter()
+    {
+        if (rc.getType() == RobotType.SOLDIER)
+        {
+            return 's';
+        }
+        else if (rc.getType() == RobotType.BASHER)
+        {
+            return 'b';
+        }
+        else if (rc.getType() == RobotType.LAUNCHER)
+        {
+            return 'l';
+        }
+        else if (rc.getType() == RobotType.TANK)
+        {
+            return 't';
+        }
+        else if (rc.getType() == RobotType.BEAVER)
+        {
+            return 'e';
+        }
+        else if (rc.getType() == RobotType.DRONE)
+        {
+            return 'd';
+        }
+        else if (rc.getType() == RobotType.COMMANDER)
+        {
+            return 'c';
+        }
+        else if (rc.getType() == RobotType.COMPUTER)
+        {
+            return 'o';
+        }
+        else if (rc.getType() == RobotType.HQ)
+        {
+            return 'h';
+        }
+        else if (rc.getType() == RobotType.TOWER)
+        {
+            return 'w';
+        }
+
+        return ' ';
+    }
+
+    public char getTeamChar()
+    {
+        if (rc.getTeam() == Team.A)
+        {
+            return 'a';
+        }
+        return 'b';
     }
 
     public abstract void run();
