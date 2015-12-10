@@ -34,6 +34,8 @@ public class Game
 
     public double[][] getTeamResults(int team)
     {
+        double[][] results = null;
 
+        return results;
     }
 }

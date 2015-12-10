@@ -7,6 +7,15 @@ import battlecode.common.*;
  */
 public class MockRobotController implements RobotController
 {
+    private Team team;
+    private RobotType robotType;
+
+    public MockRobotController(Team team, RobotType robotType)
+    {
+        this.team = team;
+        this.robotType = robotType;
+    }
+
     /**
      * Adds a custom observation to the match file, such that when it is analyzed, this observation will appear.
      *

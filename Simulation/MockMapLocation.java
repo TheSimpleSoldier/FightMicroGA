@@ -7,10 +7,53 @@ public class MockMapLocation
     public int x;
     public int y;
 
+    private TerrainTile terrain = null;
+    private MockRobotPlayer robotPlayer = null;
+
     public MockMapLocation(int x, int y)
     {
         this.x = x;
         this.y = y;
+    }
+
+    public MockMapLocation(int x, int y, TerrainTile terrain)
+    {
+        this.x = x;
+        this.y = y;
+        this.terrain = terrain;
+    }
+
+    public MockMapLocation(int x, int y, TerrainTile terrain, MockRobotPlayer robotPlayer)
+    {
+        this.x = x;
+        this.y = y;
+        this.terrain = terrain;
+        this.robotPlayer = robotPlayer;
+    }
+
+    public TerrainTile getTerrain()
+    {
+        return this.terrain;
+    }
+
+    public void setTerrain(TerrainTile terrain)
+    {
+        this.terrain = terrain;
+    }
+
+    public MockRobotPlayer getRobotPlayer()
+    {
+        return this.robotPlayer;
+    }
+
+    public void setRobotPlayer(MockRobotPlayer robotPlayer)
+    {
+        this.robotPlayer = robotPlayer;
+    }
+
+    public void removeRobotPlayer()
+    {
+        this.robotPlayer = null;
     }
 
     /**

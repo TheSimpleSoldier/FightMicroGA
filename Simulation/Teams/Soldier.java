@@ -6,6 +6,11 @@ import battlecode.common.*;
 
 public class Soldier extends MockRobotPlayer
 {
+    public Soldier(RobotController rc, double[][] weights)
+    {
+        super(rc, weights);
+    }
+
     public void run()
     {
         if (rc.getType() == RobotType.SOLDIER)
