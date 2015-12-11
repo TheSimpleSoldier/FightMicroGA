@@ -253,7 +253,7 @@ public class MockRobotController implements RobotController
      */
     public MapLocation getLocation()
     {
-        throw new Error("getLocation Not implemented");
+        return location;
     }
 
     /**
@@ -317,7 +317,7 @@ public class MockRobotController implements RobotController
     }
 
     /**
-     * Gets this robot's type (SOLDIER, HQ, etc.).
+     * Gets this robot's type (SOLDIER, etc.).
      *
      * @return
      */
@@ -517,7 +517,14 @@ public class MockRobotController implements RobotController
      */
     public MapLocation senseHQLocation()
     {
-        throw new Error("senseHQLocation Not implemented");
+        if (team == Team.A)
+        {
+            return map.teamAHQ;
+        }
+        else
+        {
+            return map.teamBHQ;
+        }
     }
 
     /**

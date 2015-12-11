@@ -16,8 +16,8 @@ public class Map
     double[][] weights1;
     double[][] weights2;
     public MockMapLocation[][] mapLayout;
-    public MockMapLocation teamAHQ;
-    public MockMapLocation teamBHQ;
+    public MapLocation teamAHQ;
+    public MapLocation teamBHQ;
 
     public Map(double[][] weights1, double[][] weights2)
     {
@@ -260,11 +260,11 @@ public class Map
                 {
                     if (team == Team.A)
                     {
-                        teamAHQ = new MockMapLocation(i, j, terrainTile);
+                        teamAHQ = new MapLocation(i, j);
                     }
                     else
                     {
-                        teamBHQ = new MockMapLocation(i, j, terrainTile);
+                        teamBHQ = new MapLocation(i, j);
                     }
                 }
 
@@ -296,12 +296,12 @@ public class Map
         return initialMap;
     }
 
-    public MockMapLocation getTeamAHQ()
+    public MapLocation getTeamAHQ()
     {
         return this.teamAHQ;
     }
 
-    public MockMapLocation getTeamBHQ()
+    public MapLocation getTeamBHQ()
     {
         return this.teamBHQ;
     }

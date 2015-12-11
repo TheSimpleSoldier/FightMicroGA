@@ -28,7 +28,7 @@ public class Game
 
             for (int j = 0; j < robotPlayers.length; j++)
             {
-                //robotPlayers[j].run();
+                robotPlayers[j].run();
             }
             System.out.println("There are: " + robotPlayers.length + " number of robots");
 
