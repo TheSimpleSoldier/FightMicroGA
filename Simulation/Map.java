@@ -16,6 +16,8 @@ public class Map
     double[][] weights1;
     double[][] weights2;
     public MockMapLocation[][] mapLayout;
+    public MockMapLocation teamAHQ;
+    public MockMapLocation teamBHQ;
 
     public Map(double[][] weights1, double[][] weights2)
     {
@@ -65,11 +67,11 @@ public class Map
      *
      * @return
      */
-    public void readInMap(String mapName)
+    public void readInMap(String mapName, Map map)
     {
         int[] mapDimensions = getMapWidthHeight(mapName);
 
-        mapLayout = getInitialMap(mapName, mapDimensions);
+        mapLayout = getInitialMap(mapName, mapDimensions, map);
     }
 
     /**
@@ -179,7 +181,7 @@ public class Map
      * @param mapName
      * @return
      */
-    private MockMapLocation[][] getInitialMap(String mapName, int[] mapDimensions)
+    private MockMapLocation[][] getInitialMap(String mapName, int[] mapDimensions, Map map)
     {
         MockMapLocation[][] initialMap = new MockMapLocation[mapDimensions[0]][mapDimensions[1]];
         String[][] mapLocations = new String[mapDimensions[0]][mapDimensions[1]];
@@ -240,12 +242,10 @@ public class Map
                 Team team = null;
                 if (mapLocations[i][j].contains("a"))
                 {
-                    System.out.println("We have team a!!");
                     team = Team.A;
                 }
                 else if (mapLocations[i][j].contains("b"))
                 {
-                    System.out.println("We have team b!!");
                     team = Team.B;
                 }
 
@@ -254,13 +254,23 @@ public class Map
 
                 if (mapLocations[i][j].contains("s"))
                 {
-                    System.out.println("We have a soldier!!");
                     robotType = RobotType.SOLDIER;
+                }
+                else if (mapLocations[i][j].contains("h"))
+                {
+                    if (team == Team.A)
+                    {
+                        teamAHQ = new MockMapLocation(i, j, terrainTile);
+                    }
+                    else
+                    {
+                        teamBHQ = new MockMapLocation(i, j, terrainTile);
+                    }
                 }
 
                 if (team != null && robotType != null)
                 {
-                    MockRobotController robotController = new MockRobotController(team, robotType, new MapLocation(i, j));
+                    MockRobotController robotController = new MockRobotController(team, robotType, new MapLocation(i, j), map);
 
                     // This is the team that we are training
                     MockRobotPlayer robotPlayer;
@@ -284,5 +294,15 @@ public class Map
         }
 
         return initialMap;
+    }
+
+    public MockMapLocation getTeamAHQ()
+    {
+        return this.teamAHQ;
+    }
+
+    public MockMapLocation getTeamBHQ()
+    {
+        return this.teamBHQ;
     }
 }

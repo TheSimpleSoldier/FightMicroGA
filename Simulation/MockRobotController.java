@@ -10,12 +10,14 @@ public class MockRobotController implements RobotController
     private Team team;
     private RobotType robotType;
     private MapLocation location;
+    private Map map;
 
-    public MockRobotController(Team team, RobotType robotType, MapLocation location)
+    public MockRobotController(Team team, RobotType robotType, MapLocation location, Map map)
     {
         this.team = team;
         this.robotType = robotType;
         this.location = location;
+        this.map = map;
     }
 
     /**

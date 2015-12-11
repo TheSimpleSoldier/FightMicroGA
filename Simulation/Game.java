@@ -18,7 +18,7 @@ public class Game
 
     public void runMatch(String MapName)
     {
-        map.readInMap(MapName);
+        map.readInMap(MapName, map);
 
         MockRobotPlayer[] robotPlayers;
 
