@@ -13,17 +13,23 @@ public class Soldier extends MockRobotPlayer
 
     public void run()
     {
+        if (target == null)
+        {
+            target = rc.senseEnemyHQLocation();
+        }
+
         if (rc.getType() == RobotType.SOLDIER)
         {
             // run soldier code
             RobotInfo[] nearByEnemies = rc.senseNearbyRobots(rc.getType().attackRadiusSquared, rc.getTeam().opponent());
 
-            if (nearByEnemies.length == 0 && rc.isWeaponReady())
+            //System.out.println(rc.isCoreReady());
+            if (nearByEnemies.length == 0 && rc.isCoreReady())
             {
                 // move towards target
                 move(target);
             }
-            else if (rc.isCoreReady())
+            else if (rc.isWeaponReady())
             {
                 // fight
                 runFightMicro(nearByEnemies);
@@ -42,6 +48,22 @@ public class Soldier extends MockRobotPlayer
      */
     public void move(MapLocation target)
     {
+        Direction dir = rc.getLocation().directionTo(target);
+        System.out.println(dir);
+
+        if (rc.canMove(dir))
+        {
+            try
+            {
+                System.out.println("Moving: " + dir + " On team: " + rc.getTeam());
+                rc.move(dir);
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+        }
+
         for (int i = 0; i < dirs.length; i++)
         {
             if (rc.canMove(dirs[i]))

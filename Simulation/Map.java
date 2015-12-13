@@ -3,13 +3,6 @@ package Simulation;
 import Simulation.Teams.Soldier;
 import battlecode.common.*;
 import java.io.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
-import java.util.*;
 
 public class Map
 {
@@ -46,7 +39,15 @@ public class Map
                     location += current.getRobotPlayer().getTeamChar();
                 }
 
-                if (current.getTerrain() == TerrainTile.NORMAL)
+                if (i == teamAHQ.x && j == teamAHQ.y)
+                {
+                    location += 'A';
+                }
+                else if (i == teamBHQ.x && j == teamBHQ.y)
+                {
+                    location += 'B';
+                }
+                else if (current.getTerrain() == TerrainTile.NORMAL)
                 {
                     location += 'n';
                 }
@@ -54,6 +55,7 @@ public class Map
                 {
                     location += 'v';
                 }
+
                 location += ' ';
 
                 System.out.print(location);
@@ -79,7 +81,7 @@ public class Map
      *
      * @return
      */
-    public MockRobotPlayer[] getRobotPlayers(String mapName)
+    public MockRobotPlayer[] getRobotPlayers()
     {
         MockRobotPlayer[] mockRobotPlayers;
 
@@ -304,5 +306,118 @@ public class Map
     public MapLocation getTeamBHQ()
     {
         return this.teamBHQ;
+    }
+
+    /**
+     * This method is used by SenseNearbyRobots
+     *
+     * @param center
+     * @param distanceSquared
+     * @return
+     */
+    public RobotInfo[] getAllRobotsInRange(MapLocation center, int distanceSquared)
+    {
+        int count = 0;
+        for (int i = 0; i < mapLayout.length; i++)
+        {
+            for (int j = 0; j < mapLayout[i].length; j++)
+            {
+                MockMapLocation current = mapLayout[i][j];
+
+                if (current.getRobotPlayer() != null && current.distanceSquaredTo(center) <= distanceSquared)
+                {
+                    count++;
+                }
+            }
+        }
+
+        RobotInfo[] robotInfos = new RobotInfo[count];
+        count = 0;
+
+        for (int i = 0; i < mapLayout.length; i++)
+        {
+            for (int j = 0; j < mapLayout[i].length; j++)
+            {
+                MockMapLocation current = mapLayout[i][j];
+
+                if (current.getRobotPlayer() != null && current.distanceSquaredTo(center) <= distanceSquared)
+                {
+                    robotInfos[count] = current.getRobotPlayer().getBotInfo();
+                    count++;
+                }
+            }
+        }
+
+        return robotInfos;
+    }
+
+    /**
+     * This method returns true if a location is occupied and false otherwise
+     *
+     * @param location
+     * @return
+     */
+    public boolean locationOccupied(MapLocation location)
+    {
+        if (mapLayout[location.x][location.y].getRobotPlayer() == null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * This method takes in a robot type and map location and returns if a unit can traverse it
+     *
+     * @param location
+     * @param robotType
+     * @return
+     */
+    public boolean terranTraversalbe(MapLocation location, RobotType robotType)
+    {
+        // can't go out of bounds
+        if (location.x >= mapLayout.length || location.y >= mapLayout[0].length)
+        {
+            return false;
+        }
+
+        if (robotType == RobotType.DRONE)
+        {
+            return true;
+        }
+
+        if (mapLayout[location.x][location.y].getTerrain() == TerrainTile.VOID)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * This method moves a robot from one location to another
+     *
+     * @param startLoc
+     * @param newLoc
+     */
+    public void moveRobot(MapLocation startLoc, MapLocation newLoc)
+    {
+        MockRobotPlayer robotPlayer = mapLayout[startLoc.x][startLoc.y].getRobotPlayer();
+
+        mapLayout[startLoc.x][startLoc.y].removeRobotPlayer();
+
+        mapLayout[newLoc.x][newLoc.y].setRobotPlayer(robotPlayer);
+    }
+
+
+    public MapLocation getHQLocation(Team team)
+    {
+        if (team == Team.A)
+        {
+            return teamAHQ;
+        }
+        return teamBHQ;
     }
 }

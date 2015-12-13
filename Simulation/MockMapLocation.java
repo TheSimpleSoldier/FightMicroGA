@@ -251,6 +251,17 @@ public class MockMapLocation
     }
 
     /**
+     * Computes the square of the distance from this location to the specified location.
+     *
+     * @param location
+     * @return
+     */
+    public int distanceSquaredTo(MapLocation location)
+    {
+        return (location.x - this.x) * (location.x - this.x) + (location.y - this.y) * (location.y - this.y);
+    }
+
+    /**
      * Two MapLocations are regarded as equal iff their coordinates are the same.
      *
      * @param obj

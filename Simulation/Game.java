@@ -22,18 +22,21 @@ public class Game
 
         MockRobotPlayer[] robotPlayers;
 
-        for (int i = 0; i < 1; i++)
+        map.print();
+
+        for (int i = 0; i < 15; i++)
         {
-            robotPlayers = map.getRobotPlayers(MapName);
+            robotPlayers = map.getRobotPlayers();
 
             for (int j = 0; j < robotPlayers.length; j++)
             {
                 robotPlayers[j].run();
+                robotPlayers[j].runTurnEnd();
             }
-            System.out.println("There are: " + robotPlayers.length + " number of robots");
 
-            map.print();
+            System.out.println("There are: " + robotPlayers.length + " number of robots");
         }
+        map.print();
     }
 
     public double[][] getTeamResults(int team)

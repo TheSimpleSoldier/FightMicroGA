@@ -1,6 +1,8 @@
 package Simulation;
 
 import battlecode.common.*;
+import battlecode.world.Robot;
+import team044.Constants;
 
 /**
  * Created by fred on 12/8/15.
@@ -11,6 +13,12 @@ public class MockRobotController implements RobotController
     private RobotType robotType;
     private MapLocation location;
     private Map map;
+    private double coreDelay;
+    private double weaponsDelay;
+    private double health;
+    private double supply;
+    private int xp;
+    private int missileCount;
 
     public MockRobotController(Team team, RobotType robotType, MapLocation location, Map map)
     {
@@ -18,6 +26,21 @@ public class MockRobotController implements RobotController
         this.robotType = robotType;
         this.location = location;
         this.map = map;
+
+        if (robotType == RobotType.SOLDIER)
+        {
+            this.health = RobotType.SOLDIER.maxHealth;
+        }
+        else
+        {
+            throw new Error("Robot Type does not get health assigned: " + robotType);
+        }
+
+        this.missileCount = 0;
+        this.xp = 0;
+        this.coreDelay = 0;
+        this.weaponsDelay = 0;
+        this.supply = 0;
     }
 
     /**
@@ -122,7 +145,17 @@ public class MockRobotController implements RobotController
      */
     public boolean canMove(Direction dir)
     {
-        throw new Error("canMove Not implemented");
+        if (this.coreDelay >= 1)
+        {
+            return false;
+        }
+
+        if (map.locationOccupied(getLocation().add(dir)))
+        {
+            return false;
+        }
+
+        return map.terranTraversalbe(getLocation().add(dir), getType());
     }
 
     /**
@@ -213,7 +246,7 @@ public class MockRobotController implements RobotController
      */
     public double getCoreDelay()
     {
-        throw new Error("getCoreDelay Not implemented");
+        return this.coreDelay;
     }
 
     /**
@@ -233,7 +266,7 @@ public class MockRobotController implements RobotController
      */
     public double getHealth()
     {
-        throw new Error("getHealth Not implemented");
+        return this.health;
     }
 
     /**
@@ -263,7 +296,7 @@ public class MockRobotController implements RobotController
      */
     public int getMissileCount()
     {
-        throw new Error("getMissileCount Not implemented");
+        return this.missileCount;
     }
 
     /**
@@ -283,7 +316,7 @@ public class MockRobotController implements RobotController
      */
     public double getSupplyLevel()
     {
-        throw new Error("getSupplyLevel Not implemented");
+        return this.supply;
     }
 
     /**
@@ -333,7 +366,7 @@ public class MockRobotController implements RobotController
      */
     public double getWeaponDelay()
     {
-        throw new Error("getWeaponDelay Not implemented");
+        return this.weaponsDelay;
     }
 
     /**
@@ -343,7 +376,7 @@ public class MockRobotController implements RobotController
      */
     public int getXP()
     {
-        throw new Error("getXP Not implemented");
+        return this.xp;
     }
 
     /**
@@ -407,7 +440,7 @@ public class MockRobotController implements RobotController
      */
     public boolean isCoreReady()
     {
-        throw new Error("isCoreReady Not implemented");
+        return this.coreDelay < 1;
     }
 
     /**
@@ -440,7 +473,14 @@ public class MockRobotController implements RobotController
      */
     public boolean isWeaponReady()
     {
-        throw new Error("isWeaponReady Not implemented");
+        if (this.weaponsDelay < 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**
@@ -460,7 +500,21 @@ public class MockRobotController implements RobotController
      */
     public void move(Direction dir)
     {
-        throw new Error("move Not implemented");
+        if (canMove(dir))
+        {
+            map.moveRobot(getLocation(), getLocation().add(dir));
+
+
+            if (robotType == RobotType.SOLDIER)
+            {
+                coreDelay += RobotType.SOLDIER.movementDelay;
+                weaponsDelay += RobotType.SOLDIER.loadingDelay;
+            }
+        }
+        else
+        {
+            System.out.println("Trying to move where we can't");
+        }
     }
 
     /**
@@ -497,7 +551,7 @@ public class MockRobotController implements RobotController
      */
     public MapLocation senseEnemyHQLocation()
     {
-        throw new Error("senseEnemyHQLocation Not implemented");
+        return map.getHQLocation(team.opponent());
     }
 
     /**
@@ -534,7 +588,7 @@ public class MockRobotController implements RobotController
      */
     public RobotInfo[] senseNearbyRobots()
     {
-        throw new Error("senseNearbyRobots Not implemented");
+        return map.getAllRobotsInRange(getLocation(), 1000000);
     }
 
     /**
@@ -545,7 +599,7 @@ public class MockRobotController implements RobotController
      */
     public RobotInfo[] senseNearbyRobots(int radiusSquared)
     {
-        throw new Error("senseNearbyRobots Not implemented");
+        return map.getAllRobotsInRange(getLocation(), radiusSquared);
     }
 
     /**
@@ -557,7 +611,30 @@ public class MockRobotController implements RobotController
      */
     public RobotInfo[] senseNearbyRobots(int radiusSquared, Team team)
     {
-        throw new Error("senseNearbyRobots Not implemented");
+        RobotInfo[] allBots = map.getAllRobotsInRange(getLocation(), radiusSquared);
+        RobotInfo[] teamBots;
+        int count = 0;
+
+        for (int i = 0; i < allBots.length; i++)
+        {
+            if (allBots[i].team == team)
+            {
+                count++;
+            }
+        }
+
+        teamBots = new RobotInfo[count];
+        count = 0;
+
+        for (int i = 0; i < allBots.length; i++)
+        {
+            if (allBots[i].team == team)
+            {
+                count++;
+            }
+        }
+
+        return teamBots;
     }
 
     /**
@@ -570,7 +647,30 @@ public class MockRobotController implements RobotController
      */
     public RobotInfo[] senseNearbyRobots(MapLocation center, int radiusSquared, Team team)
     {
-        throw new Error("senseNearbyRobots Not implemented");
+        RobotInfo[] allBots = map.getAllRobotsInRange(center, radiusSquared);
+        RobotInfo[] teamBots;
+        int count = 0;
+
+        for (int i = 0; i < allBots.length; i++)
+        {
+            if (allBots[i].team == team)
+            {
+                count++;
+            }
+        }
+
+        teamBots = new RobotInfo[count];
+        count = 0;
+
+        for (int i = 0; i < allBots.length; i++)
+        {
+            if (allBots[i].team == team)
+            {
+                count++;
+            }
+        }
+
+        return teamBots;
     }
 
     /**
@@ -715,6 +815,22 @@ public class MockRobotController implements RobotController
      */
     public void	yield()
     {
-        throw new Error("yield Not implemented");
+        if (coreDelay > 1)
+        {
+            coreDelay--;
+        }
+        else
+        {
+            coreDelay = 0;
+        }
+
+        if (weaponsDelay > 1)
+        {
+            weaponsDelay--;
+        }
+        else
+        {
+            weaponsDelay = 0;
+        }
     }
 }

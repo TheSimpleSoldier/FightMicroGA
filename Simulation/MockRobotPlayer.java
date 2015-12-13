@@ -25,7 +25,7 @@ public abstract class MockRobotPlayer
     public MockRobotPlayer(RobotController robotController, double[][] weights)
     {
         this.rc = robotController;
-        //this.target = rc.senseEnemyHQLocation();
+        this.target = rc.senseEnemyHQLocation();
         this.weights = weights;
         dirs = Direction.values();
     }
@@ -83,6 +83,29 @@ public abstract class MockRobotPlayer
             return 'a';
         }
         return 'b';
+    }
+
+    public RobotInfo getBotInfo()
+    {
+        int ID = 0;
+        Team team = rc.getTeam();
+        RobotType type = rc.getType();
+        MapLocation location = rc.getLocation();
+        double coreDelay = rc.getCoreDelay();
+        double weaponDelay = rc.getWeaponDelay();
+        double health = rc.getHealth();
+        double supplyLevel = rc.getSupplyLevel();
+        int xp = rc.getXP();
+        int missileCount = rc.getMissileCount();
+        MapLocation builder = rc.getLocation(); // this is wrong
+        MapLocation buildingLocation = rc.getLocation(); // this is wrong
+
+        return new RobotInfo(ID, team, type, location, coreDelay, weaponDelay, health, supplyLevel, xp, missileCount, builder, buildingLocation);
+    }
+
+    public void runTurnEnd()
+    {
+        rc.yield();
     }
 
     public abstract void run();
