@@ -35,9 +35,10 @@ public class Soldier extends MockRobotPlayer
                 // move towards target
                 move(target);
             }
-            else
+            else if(nearByEnemies.length > 0)
             {
                 // fight
+                System.out.println("fighting");
                 runFightMicro(allBots, target);
             }
         }
@@ -55,18 +56,22 @@ public class Soldier extends MockRobotPlayer
     public void move(MapLocation target)
     {
         Direction dir = getDir(target);
-        System.out.println(dir);
+        //System.out.println(dir);
 
         if (rc.canMove(dir))
         {
             try
             {
                 System.out.println("Moving: " + dir + " On team: " + rc.getTeam());
+                System.out.println(rc.getLocation());
                 rc.move(dir);
+                System.out.println(rc.getLocation());
+                System.out.println();
             }
             catch(Exception e)
             {
-                System.out.println(e);
+                System.out.println("Failed to move");
+                e.printStackTrace();
             }
         }
 

@@ -1,8 +1,6 @@
 package Simulation;
 
 import battlecode.common.*;
-import battlecode.world.Robot;
-import team044.Constants;
 
 /**
  * Created by fred on 12/8/15.
@@ -60,7 +58,7 @@ public class MockRobotController implements RobotController
      */
     public void attackLocation(MapLocation loc)
     {
-        throw new Error("attackLocation Not implemented");
+        //throw new Error("attackLocation Not implemented");
     }
 
     /**
@@ -503,6 +501,7 @@ public class MockRobotController implements RobotController
         if (canMove(dir))
         {
             map.moveRobot(getLocation(), getLocation().add(dir));
+            location = getLocation().add(dir);
 
 
             if (robotType == RobotType.SOLDIER)

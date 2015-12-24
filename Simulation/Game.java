@@ -1,7 +1,5 @@
 package Simulation;
 
-import battlecode.common.*;
-
 public class Game
 {
     private double[][] team1Inputs;
@@ -24,7 +22,7 @@ public class Game
 
         map.print();
 
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 100; i++)
         {
             robotPlayers = map.getRobotPlayers();
 
