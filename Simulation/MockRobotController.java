@@ -58,6 +58,7 @@ public class MockRobotController implements RobotController
      */
     public void attackLocation(MapLocation loc)
     {
+        System.out.println("Attacking " + loc);
         //throw new Error("attackLocation Not implemented");
     }
 
@@ -713,7 +714,7 @@ public class MockRobotController implements RobotController
      */
     public TerrainTile senseTerrainTile(MapLocation loc)
     {
-        throw new Error("senseTerrainTile Not implemented");
+        return map.mapLayout[loc.x][loc.y].getTerrain();
     }
 
     /**
