@@ -12,10 +12,21 @@ public class Map
     public MapLocation teamAHQ;
     public MapLocation teamBHQ;
 
+    private double blueSoldierDamageDealt;
+    private double blueSoldierTotalHealth;
+
+    private double redSoldierDamageDealt;
+    private double redSoldierTotalHealth;
+
     public Map(double[][] weights1, double[][] weights2)
     {
         this.weights1 = weights1;
         this.weights2 = weights2;
+
+        this.blueSoldierDamageDealt = 0;
+        this.blueSoldierTotalHealth = 0;
+        this.redSoldierDamageDealt = 0;
+        this.redSoldierTotalHealth = 0;
     }
 
     /**
@@ -408,7 +419,27 @@ public class Map
 
         mapLayout[startLoc.x][startLoc.y].removeRobotPlayer();
 
-        mapLayout[newLoc.x][newLoc.y].setRobotPlayer(robotPlayer);
+        if (!robotPlayer.removeFromGame())
+        {
+            mapLayout[newLoc.x][newLoc.y].setRobotPlayer(robotPlayer);
+        }
+        else
+        {
+            // record stats for bot
+            if (robotPlayer.getRc().getTeam() == Team.A)
+            {
+                this.redSoldierTotalHealth += robotPlayer.getHealth();
+//                this.redSoldierDamageDealt += ((MockRobotController) robotPlayer.getRc()).getTotalDamageDealt();
+            }
+            else
+            {
+                System.out.println("Health: " + robotPlayer.getHealth());
+                this.blueSoldierTotalHealth += robotPlayer.getHealth();
+//                this.blueSoldierDamageDealt += ((MockRobotController) robotPlayer.getRc()).getTotalDamageDealt();
+            }
+
+            System.out.println("Player removed from game");
+        }
     }
 
 
@@ -419,5 +450,56 @@ public class Map
             return teamAHQ;
         }
         return teamBHQ;
+    }
+
+    public void attackLocation(MapLocation loc, double attackAmount)
+    {
+        MockRobotPlayer player = mapLayout[loc.x][loc.y].getRobotPlayer();
+
+        player.takeDamage(attackAmount);
+
+        if (player.getRc().getTeam() == Team.A)
+        {
+            this.blueSoldierDamageDealt += attackAmount;
+        }
+        else
+        {
+            this.redSoldierDamageDealt += attackAmount;
+        }
+
+        System.out.println("New Health: " + player.getHealth());
+        if (player.getHealth() <= 0)
+        {
+//            if (player.getRc().getTeam() == Team.A)
+//            {
+//                this.redSoldierDamageDealt += ((MockRobotController) player.getRc()).getTotalDamageDealt();
+//            }
+//            else
+//            {
+//                this.blueSoldierDamageDealt += ((MockRobotController) player.getRc()).getTotalDamageDealt();
+//            }
+
+            mapLayout[loc.x][loc.y].removeRobotPlayer();
+        }
+    }
+
+    public double getBlueSoldierDamageDealt()
+    {
+        return this.blueSoldierDamageDealt;
+    }
+
+    public double getBlueSoldierTotalHealth()
+    {
+        return this.blueSoldierTotalHealth;
+    }
+
+    public double getRedSoldierDamageDealt()
+    {
+        return this.redSoldierDamageDealt;
+    }
+
+    public double getRedSoldierTotalHealth()
+    {
+        return this.redSoldierTotalHealth;
     }
 }

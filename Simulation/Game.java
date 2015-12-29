@@ -22,7 +22,7 @@ public class Game
 
         map.print();
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 200; i++)
         {
             robotPlayers = map.getRobotPlayers();
 
@@ -32,8 +32,14 @@ public class Game
                 robotPlayers[j].runTurnEnd();
             }
 
-            System.out.println("There are: " + robotPlayers.length + " number of robots");
+//            map.print();
+//            System.out.println("There are: " + robotPlayers.length + " number of robots");
         }
+
+        System.out.println("Total Red Damage Dealt: " + map.getRedSoldierDamageDealt());
+        System.out.println("Total End Red Health: " + map.getRedSoldierTotalHealth());
+        System.out.println("Total Blue Damage Dealt: " + map.getBlueSoldierDamageDealt());
+        System.out.println("Total End Blue Health: " + map.getBlueSoldierTotalHealth());
         map.print();
     }
 

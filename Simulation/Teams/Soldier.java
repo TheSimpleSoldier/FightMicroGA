@@ -38,8 +38,11 @@ public class Soldier extends MockRobotPlayer
             else if(nearByEnemies.length > 0)
             {
                 // fight
-                System.out.println("fighting");
                 runFightMicro(allBots, target);
+            }
+            else
+            {
+//                System.out.println("Waiting");
             }
         }
         else
@@ -62,11 +65,11 @@ public class Soldier extends MockRobotPlayer
         {
             try
             {
-                System.out.println("Moving: " + dir + " On team: " + rc.getTeam());
-                System.out.println(rc.getLocation());
+                //System.out.println("Moving: " + dir + " On team: " + rc.getTeam());
+                //System.out.println(rc.getLocation());
                 rc.move(dir);
-                System.out.println(rc.getLocation());
-                System.out.println();
+                //System.out.println(rc.getLocation());
+                //System.out.println();
             }
             catch(Exception e)
             {
@@ -77,7 +80,7 @@ public class Soldier extends MockRobotPlayer
 
         for (int i = 0; i < dirs.length; i++)
         {
-            if (rc.canMove(dirs[i]))
+            if (dirs[i] != Direction.OMNI && dirs[i] != Direction.NONE && rc.canMove(dirs[i]))
             {
                 try
                 {
@@ -111,9 +114,9 @@ public class Soldier extends MockRobotPlayer
         double[] output = net.compute(inputs);
         for(int k = 0; k < output.length; k++)
         {
-            System.out.print(output[k] + " ");
+//            System.out.print(output[k] + " ");
         }
-        System.out.println();
+//        System.out.println();
 
         if(output[0] > .5)
         {
@@ -456,11 +459,11 @@ public class Soldier extends MockRobotPlayer
             toReturn[k + 39] = allyCounts[k] / 10;
         }
 
-        for(int k = 0; k < toReturn.length; k++)
-        {
-            System.out.print(toReturn[k] + ", ");
-        }
-        System.out.println();
+//        for(int k = 0; k < toReturn.length; k++)
+//        {
+//            System.out.print(toReturn[k] + ", ");
+//        }
+//        System.out.println();
 
         return toReturn;
     }

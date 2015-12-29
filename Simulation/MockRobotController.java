@@ -17,6 +17,7 @@ public class MockRobotController implements RobotController
     private double supply;
     private int xp;
     private int missileCount;
+    private double totalDamageDealt;
 
     public MockRobotController(Team team, RobotType robotType, MapLocation location, Map map)
     {
@@ -39,6 +40,7 @@ public class MockRobotController implements RobotController
         this.coreDelay = 0;
         this.weaponsDelay = 0;
         this.supply = 0;
+        this.totalDamageDealt = 0;
     }
 
     /**
@@ -58,8 +60,12 @@ public class MockRobotController implements RobotController
      */
     public void attackLocation(MapLocation loc)
     {
-        System.out.println("Attacking " + loc);
-        //throw new Error("attackLocation Not implemented");
+        if (loc.distanceSquaredTo(getLocation()) <= getType().attackRadiusSquared)
+        {
+            totalDamageDealt += getType().attackPower;
+            map.attackLocation(loc, getType().attackPower);
+            System.out.println("Robot on Team: " + getTeam() + " had dealt: " + getType().attackPower + " damage");
+        }
     }
 
     /**
@@ -499,11 +505,10 @@ public class MockRobotController implements RobotController
      */
     public void move(Direction dir)
     {
-        if (canMove(dir))
+        if (canMove(dir) && dir != Direction.NONE && dir != Direction.OMNI)
         {
             map.moveRobot(getLocation(), getLocation().add(dir));
             location = getLocation().add(dir);
-
 
             if (robotType == RobotType.SOLDIER)
             {
@@ -714,6 +719,15 @@ public class MockRobotController implements RobotController
      */
     public TerrainTile senseTerrainTile(MapLocation loc)
     {
+        if (loc.x < 0 || loc.x >= map.mapLayout.length)
+        {
+            return null;
+        }
+        if (loc.y < 0 || loc.y >= map.mapLayout[loc.x].length)
+        {
+            return null;
+        }
+
         return map.mapLayout[loc.x][loc.y].getTerrain();
     }
 
@@ -832,5 +846,16 @@ public class MockRobotController implements RobotController
         {
             weaponsDelay = 0;
         }
+    }
+
+
+    public void takeDamage(double damage)
+    {
+        this.health -= damage;
+    }
+
+    public double getTotalDamageDealt()
+    {
+        return this.totalDamageDealt;
     }
 }

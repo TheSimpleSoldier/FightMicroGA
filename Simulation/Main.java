@@ -51,7 +51,7 @@ public class Main
     {
         Game game = new Game(team1Inputs, team2Inputs);
 
-        game.runMatch("Simulation/simulationMaps/onetower.xml");
+        game.runMatch("FightMicroGA/Simulation/simulationMaps/onetower.xml");
 
         double[][][] results = new double[2][][];
 

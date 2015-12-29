@@ -109,4 +109,41 @@ public abstract class MockRobotPlayer
     }
 
     public abstract void run();
+
+    public void takeDamage(double damage)
+    {
+        System.out.println("Taking damage");
+        ((MockRobotController) rc).takeDamage(damage);
+    }
+
+    public double getHealth()
+    {
+        return this.rc.getHealth();
+    }
+
+    public boolean noCloseEnemies()
+    {
+        if (this.rc.senseNearbyRobots(rc.getLocation(), 49, rc.getTeam().opponent()).length == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeFromGame()
+    {
+        if (target != null)
+        {
+            if (rc.getLocation().isAdjacentTo(target) && noCloseEnemies())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public RobotController getRc()
+    {
+        return this.rc;
+    }
 }
