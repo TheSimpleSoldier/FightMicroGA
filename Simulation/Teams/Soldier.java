@@ -38,7 +38,7 @@ public class Soldier extends MockRobotPlayer
             else if(nearByEnemies.length > 0)
             {
                 // fight
-                runFightMicro(nearByEnemies, target);
+                runFightMicro(allBots, target, nearByEnemies);
             }
             else
             {
@@ -94,6 +94,28 @@ public class Soldier extends MockRobotPlayer
         }
     }
 
+    /**
+     * This method returns the RobotInfo for the Robot with the lowest health
+     */
+    public static RobotInfo findWeakestEnemy(RobotInfo[] nearByEnemies)
+    {
+        RobotInfo weakest = nearByEnemies[nearByEnemies.length - 1];
+
+        for (int i = nearByEnemies.length-1; --i > 0; )
+        {
+            if (nearByEnemies[i] == null)
+            {
+                System.out.println("Enemy is null");
+            }
+            else if (nearByEnemies[i].health < weakest.health)
+            {
+                weakest = nearByEnemies[i];
+            }
+        }
+
+        return weakest;
+    }
+
     private Direction getDir(MapLocation target)
     {
         return rc.getLocation().directionTo(target);
@@ -102,113 +124,124 @@ public class Soldier extends MockRobotPlayer
     /**
      * This function runs the fight micro
      */
-    public void runFightMicro(RobotInfo[] nearByBots, MapLocation target)
+    public void runFightMicro(RobotInfo[] nearByBots, MapLocation target, RobotInfo[] nearByEnemies)
     {
-        Direction dir = getDir(target);
-        int forward = 0;
-        int left = 0;
-        boolean fight = false;
-
-        double[] inputs = getInputs(nearByBots, dir);
-
-        double[] output = net.compute(inputs);
-        for(int k = 0; k < output.length; k++)
+        try
         {
+            Direction dir = getDir(target);
+            int forward = 0;
+            int left = 0;
+            boolean fight = false;
+
+            double[] inputs = getInputs(nearByBots, dir);
+
+            double[] output = net.compute(inputs);
+            for(int k = 0; k < output.length; k++)
+            {
 //            System.out.print(output[k] + " ");
-        }
+            }
 //        System.out.println();
 
-        if(output[0] > .5)
-        {
-            forward++;
-        }
-        if(output[1] > .5)
-        {
-            forward--;
-        }
-        if(output[2] > .5)
-        {
-            left++;
-        }
-        if(output[3] > .5)
-        {
-            left--;
-        }
-        if(output[4] > .5)
-        {
-            fight = true;
-        }
-
-        if (fight && nearByBots.length > 0)
-        {
-            try
+            if(output[0] > .5)
             {
-                rc.attackLocation(nearByBots[0].location);
+                forward++;
             }
-            catch (Exception e)
+            if(output[1] > .5)
             {
-                System.out.println(e);
+                forward--;
             }
-        }
-        else
-        {
-            switch(forward)
+            if(output[2] > .5)
             {
-                case -1:
-                    switch(left)
-                    {
-                        case -1:
-                            dir = dir.rotateRight().rotateRight().rotateRight();
-                            break;
-                        case 0:
-                            dir = dir.opposite();
-                            break;
-                        case 1:
-                            dir = dir.rotateLeft().rotateLeft().rotateLeft();
-                            break;
-                    }
-                    break;
-                case 0:
-                    switch(left)
-                    {
-                        case -1:
-                            dir = dir.rotateRight().rotateRight();
-                            break;
-                        case 0:
-                            dir = Direction.NONE;
-                            break;
-                        case 1:
-                            dir = dir.rotateLeft().rotateLeft();
-                            break;
-                    }
-                    break;
-                case 1:
-                    switch(left)
-                    {
-                        case -1:
-                            dir = dir.rotateRight();
-                            break;
-                        case 0:
-                            break;
-                        case 1:
-                            dir = dir.rotateLeft();
-                            break;
-                    }
-                    break;
+                left++;
+            }
+            if(output[3] > .5)
+            {
+                left--;
+            }
+            if(output[4] > .5)
+            {
+                fight = true;
             }
 
-            try
+            if (fight && nearByBots.length > 0)
             {
-                if(rc.canMove(dir))
+                try
                 {
-                    rc.move(dir);
+                    MapLocation attackSpot = findWeakestEnemy(nearByEnemies).location;
+                    if (rc.canAttackLocation(attackSpot))
+                    {
+                        rc.attackLocation(attackSpot);
+                    }
+                }
+                catch (Exception e)
+                {
+                    System.out.println(e);
                 }
             }
-            catch(Exception e)
+            else
             {
-                System.out.println("Failed to move while fighting");
-                e.printStackTrace();
+                switch(forward)
+                {
+                    case -1:
+                        switch(left)
+                        {
+                            case -1:
+                                dir = dir.rotateRight().rotateRight().rotateRight();
+                                break;
+                            case 0:
+                                dir = dir.opposite();
+                                break;
+                            case 1:
+                                dir = dir.rotateLeft().rotateLeft().rotateLeft();
+                                break;
+                        }
+                        break;
+                    case 0:
+                        switch(left)
+                        {
+                            case -1:
+                                dir = dir.rotateRight().rotateRight();
+                                break;
+                            case 0:
+                                dir = Direction.NONE;
+                                break;
+                            case 1:
+                                dir = dir.rotateLeft().rotateLeft();
+                                break;
+                        }
+                        break;
+                    case 1:
+                        switch(left)
+                        {
+                            case -1:
+                                dir = dir.rotateRight();
+                                break;
+                            case 0:
+                                break;
+                            case 1:
+                                dir = dir.rotateLeft();
+                                break;
+                        }
+                        break;
+                }
+
+                try
+                {
+                    if(rc.canMove(dir))
+                    {
+                        rc.move(dir);
+                    }
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Failed to move while fighting");
+                    e.printStackTrace();
+                }
             }
+        }
+        catch(Exception e)
+        {
+            System.out.println("We failed in the fight Micro");
         }
     }
 
@@ -231,7 +264,7 @@ public class Soldier extends MockRobotPlayer
      * @param dir direction we want to go
      * @return
      */
-    private double[] getInputs(RobotInfo[] nearByBots, Direction dir)
+    private double[] getInputs(RobotInfo[] nearByBots, Direction dir) throws Exception
     {
         double enemyCount = 0;
         double allyCount = 0;

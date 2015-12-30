@@ -449,6 +449,11 @@ public class Map
     {
         MockRobotPlayer robotPlayer = mapLayout[startLoc.x][startLoc.y].getRobotPlayer();
 
+        if (robotPlayer == null)
+        {
+            return;
+        }
+
         mapLayout[startLoc.x][startLoc.y].removeRobotPlayer();
 
         if (!robotPlayer.removeFromGame())

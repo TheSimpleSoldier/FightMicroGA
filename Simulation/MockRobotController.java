@@ -159,6 +159,11 @@ public class MockRobotController implements RobotController
             return false;
         }
 
+        if (dir == Direction.OMNI || dir == Direction.NONE)
+        {
+            return false;
+        }
+
         if (map.locationOccupied(getLocation().add(dir)))
         {
             return false;
@@ -509,7 +514,11 @@ public class MockRobotController implements RobotController
      */
     public void move(Direction dir)
     {
-        if (canMove(dir) && dir != Direction.NONE && dir != Direction.OMNI)
+        if (dir == Direction.NONE || dir == Direction.OMNI)
+        {
+            System.out.println("Moving in dir None or Omni");
+        }
+        else if (canMove(dir))
         {
             map.moveRobot(getLocation(), getLocation().add(dir));
             location = getLocation().add(dir);

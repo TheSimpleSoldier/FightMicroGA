@@ -101,7 +101,7 @@ public class team044 extends MockRobotPlayer {
             {
                 MapLocation enemy = enemyToAttack.location;
 
-                if (rc.canAttackLocation(enemy))
+                if (enemy != null && rc.canAttackLocation(enemy))
                 {
                     rc.attackLocation(enemy);
                 }
