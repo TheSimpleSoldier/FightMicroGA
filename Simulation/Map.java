@@ -1,6 +1,7 @@
 package Simulation;
 
 import Simulation.Teams.Soldier;
+import Simulation.Teams.team044;
 import battlecode.common.*;
 import java.io.*;
 
@@ -11,6 +12,7 @@ public class Map
     public MockMapLocation[][] mapLayout;
     public MapLocation teamAHQ;
     public MapLocation teamBHQ;
+    private boolean verbose;
 
     private double blueSoldierDamageDealt;
     private double blueSoldierTotalHealth;
@@ -18,7 +20,8 @@ public class Map
     private double redSoldierDamageDealt;
     private double redSoldierTotalHealth;
 
-    public Map(double[][] weights1, double[][] weights2)
+
+    public Map(double[][] weights1, double[][] weights2, boolean verbose)
     {
         this.weights1 = weights1;
         this.weights2 = weights2;
@@ -27,6 +30,7 @@ public class Map
         this.blueSoldierTotalHealth = 0;
         this.redSoldierDamageDealt = 0;
         this.redSoldierTotalHealth = 0;
+        this.verbose = verbose;
     }
 
     /**
@@ -80,11 +84,11 @@ public class Map
      *
      * @return
      */
-    public void readInMap(String mapName, Map map)
+    public void readInMap(String mapName, Map map, int teamA, int teamB)
     {
         int[] mapDimensions = getMapWidthHeight(mapName);
 
-        mapLayout = getInitialMap(mapName, mapDimensions, map);
+        mapLayout = getInitialMap(mapName, mapDimensions, map, teamA, teamB);
     }
 
     /**
@@ -137,7 +141,7 @@ public class Map
         int height = 0;
         int width = 0;
 
-        System.out.println("got here");
+//        System.out.println("got here");
         try
         {
             BufferedReader in = new BufferedReader(new FileReader(new File(mapName)));
@@ -194,7 +198,7 @@ public class Map
      * @param mapName
      * @return
      */
-    private MockMapLocation[][] getInitialMap(String mapName, int[] mapDimensions, Map map)
+    private MockMapLocation[][] getInitialMap(String mapName, int[] mapDimensions, Map map, int teamA, int teamB)
     {
         MockMapLocation[][] initialMap = new MockMapLocation[mapDimensions[0]][mapDimensions[1]];
         String[][] mapLocations = new String[mapDimensions[0]][mapDimensions[1]];
@@ -290,11 +294,25 @@ public class Map
 
                     if (team == Team.A)
                     {
-                        robotPlayer = new Soldier(robotController, weights1);
+                        if (teamA == 1)
+                        {
+                            robotPlayer = new team044(robotController, weights1);
+                        }
+                        else
+                        {
+                            robotPlayer = new Soldier(robotController, weights1);
+                        }
                     }
                     else
                     {
-                        robotPlayer = new Soldier(robotController, weights2);
+                        if (teamB == 1)
+                        {
+                            robotPlayer = new team044(robotController, weights2);
+                        }
+                        else
+                        {
+                            robotPlayer = new Soldier(robotController, weights2);
+                        }
                     }
 
                     initialMap[i][j] = new MockMapLocation(i, j, terrainTile, robotPlayer);
@@ -370,6 +388,15 @@ public class Map
      */
     public boolean locationOccupied(MapLocation location)
     {
+        if (location.x < 0 || location.x >= mapLayout.length)
+        {
+            return false;
+        }
+        if (location.y < 0 || location.y >= mapLayout[location.x].length)
+        {
+            return false;
+        }
+
         if (mapLayout[location.x][location.y].getRobotPlayer() == null)
         {
             return false;
@@ -389,7 +416,12 @@ public class Map
     public boolean terranTraversalbe(MapLocation location, RobotType robotType)
     {
         // can't go out of bounds
-        if (location.x >= mapLayout.length || location.y >= mapLayout[0].length)
+        if (location.x >= mapLayout.length || location.x < 0)
+        {
+            return false;
+        }
+
+        if (location.y >= mapLayout[location.x].length || location.y < 0)
         {
             return false;
         }
@@ -433,12 +465,12 @@ public class Map
             }
             else
             {
-                System.out.println("Health: " + robotPlayer.getHealth());
+//                System.out.println("Health: " + robotPlayer.getHealth());
                 this.blueSoldierTotalHealth += robotPlayer.getHealth();
 //                this.blueSoldierDamageDealt += ((MockRobotController) robotPlayer.getRc()).getTotalDamageDealt();
             }
 
-            System.out.println("Player removed from game");
+//            System.out.println("Player removed from game");
         }
     }
 
@@ -467,7 +499,7 @@ public class Map
             this.redSoldierDamageDealt += attackAmount;
         }
 
-        System.out.println("New Health: " + player.getHealth());
+//        System.out.println("New Health: " + player.getHealth());
         if (player.getHealth() <= 0)
         {
 //            if (player.getRc().getTeam() == Team.A)

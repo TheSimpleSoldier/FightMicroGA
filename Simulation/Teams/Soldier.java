@@ -13,7 +13,7 @@ public class Soldier extends MockRobotPlayer
     {
         super(rc, weights);
         net = new FeedForwardNeuralNetwork(1, new int[]{60, 50, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
-        //net.setWeights(weights[0]);
+        net.setWeights(weights[0]);
     }
 
     public void run()
@@ -38,7 +38,7 @@ public class Soldier extends MockRobotPlayer
             else if(nearByEnemies.length > 0)
             {
                 // fight
-                runFightMicro(allBots, target);
+                runFightMicro(nearByEnemies, target);
             }
             else
             {
@@ -431,22 +431,26 @@ public class Soldier extends MockRobotPlayer
         for(int k = 0; k < 8; k++)
         {
             TerrainTile tile = rc.senseTerrainTile(rc.getLocation().add(dir));//terrain
-            switch(tile)
+
+            if (tile != null)
             {
-                case NORMAL:
-                    toReturn[k + 10] = .25;
-                    break;
-                case UNKNOWN:
-                    toReturn[k + 10] = .5;
-                    break;
-                case VOID:
-                    toReturn[k + 10] = .75;
-                    break;
-                case OFF_MAP:
-                    toReturn[k + 10] = 1;
-                    break;
-                default:
-                    toReturn[k + 10] = 0;
+                switch(tile)
+                {
+                    case NORMAL:
+                        toReturn[k + 10] = .25;
+                        break;
+                    case UNKNOWN:
+                        toReturn[k + 10] = .5;
+                        break;
+                    case VOID:
+                        toReturn[k + 10] = .75;
+                        break;
+                    case OFF_MAP:
+                        toReturn[k + 10] = 1;
+                        break;
+                    default:
+                        toReturn[k + 10] = 0;
+                }
             }
             dir = dir.rotateRight();
         }

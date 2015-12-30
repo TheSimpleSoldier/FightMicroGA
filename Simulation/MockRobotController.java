@@ -64,7 +64,7 @@ public class MockRobotController implements RobotController
         {
             totalDamageDealt += getType().attackPower;
             map.attackLocation(loc, getType().attackPower);
-            System.out.println("Robot on Team: " + getTeam() + " had dealt: " + getType().attackPower + " damage");
+//            System.out.println("Robot on Team: " + getTeam() + " had dealt: " + getType().attackPower + " damage");
         }
     }
 
@@ -106,7 +106,11 @@ public class MockRobotController implements RobotController
      */
     public boolean canAttackLocation(MapLocation loc)
     {
-        throw new Error("canAttackLocation Not implemented");
+        if (loc.distanceSquaredTo(getLocation()) <= getType().attackRadiusSquared)
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -635,6 +639,7 @@ public class MockRobotController implements RobotController
         {
             if (allBots[i].team == team)
             {
+                teamBots[count] = allBots[i];
                 count++;
             }
         }

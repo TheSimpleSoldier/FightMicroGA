@@ -112,7 +112,7 @@ public abstract class MockRobotPlayer
 
     public void takeDamage(double damage)
     {
-        System.out.println("Taking damage");
+//        System.out.println("Taking damage");
         ((MockRobotController) rc).takeDamage(damage);
     }
 
