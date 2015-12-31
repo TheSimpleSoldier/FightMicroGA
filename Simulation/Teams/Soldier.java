@@ -12,7 +12,7 @@ public class Soldier extends MockRobotPlayer
     public Soldier(RobotController rc, double[][] weights)
     {
         super(rc, weights);
-        net = new FeedForwardNeuralNetwork(1, new int[]{18, 25, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
+        net = new FeedForwardNeuralNetwork(1, new int[]{18, 25, 5}, ActivationFunction.STEP, ActivationFunction.STEP);
         net.setWeights(weights[0]);
     }
 

@@ -375,6 +375,12 @@ public class FeedForwardNeuralNetwork
                 return linearSlope * sum;
             case LOGISTIC:
                 return 1.0 / (1.0 + Math.pow(Math.E, sum * -1.0));
+            case STEP:
+                if(sum < .5)
+                {
+                    return 0;
+                }
+                return 1;
         }
 
         System.out.println("Failed to apply activation function");
