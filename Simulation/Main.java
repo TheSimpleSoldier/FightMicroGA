@@ -41,7 +41,7 @@ public class Main
 
     public static double[][] getIdealWeights(int popSize, int rounds, double mutationRate, double crossOverRate, double mutationAmount)
     {
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{18, 50, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{18, 25, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
 
         double[][][] population = new double[popSize][][];
 
