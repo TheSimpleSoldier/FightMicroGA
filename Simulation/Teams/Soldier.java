@@ -26,8 +26,8 @@ public class Soldier extends MockRobotPlayer
         if (rc.getType() == RobotType.SOLDIER)
         {
             // run soldier code
-            RobotInfo[] nearByEnemies = rc.senseNearbyRobots(rc.getType().sensorRadiusSquared, rc.getTeam().opponent());
-            RobotInfo[] allBots = rc.senseNearbyRobots(rc.getType().attackRadiusSquared);
+            RobotInfo[] nearByEnemies = rc.senseNearbyRobots(rc.getType().attackRadiusSquared, rc.getTeam().opponent());
+            RobotInfo[] allBots = rc.senseNearbyRobots(rc.getType().sensorRadiusSquared);
 
             //System.out.println(rc.isCoreReady());
             if (nearByEnemies.length == 0 && rc.isCoreReady())
@@ -130,41 +130,36 @@ public class Soldier extends MockRobotPlayer
         try
         {
             Direction dir = getDir(target);
-            int forward = 0;
-            int left = 0;
+            int North = 0;
+            int West = 0;
             boolean fight = false;
 
             double[] inputs = getInputs(nearByBots, dir);
 
             double[] output = net.computeFast(inputs);
-            for(int k = 0; k < output.length; k++)
-            {
-//            System.out.print(output[k] + " ");
-            }
-//        System.out.println();
 
             if(output[0] > .5)
             {
-                forward++;
+                North++;
             }
             if(output[1] > .5)
             {
-                forward--;
+                North--;
             }
             if(output[2] > .5)
             {
-                left++;
+                West++;
             }
             if(output[3] > .5)
             {
-                left--;
+                West--;
             }
             if(output[4] > .5)
             {
                 fight = true;
             }
 
-            if (fight && nearByBots.length > 0)
+            if (fight && nearByEnemies.length > 0)
             {
                 try
                 {
@@ -172,7 +167,7 @@ public class Soldier extends MockRobotPlayer
                     if (weakEnemy != null)
                     {
                         MapLocation attackSpot = weakEnemy.location;
-                        if (rc.canAttackLocation(attackSpot))
+                        if (attackSpot != null && rc.canAttackLocation(attackSpot))
                         {
                             rc.attackLocation(attackSpot);
                         }
@@ -182,54 +177,57 @@ public class Soldier extends MockRobotPlayer
                 {
                     System.out.println("failed when trying to attack");
                     System.out.println(e);
+                    e.printStackTrace();
                 }
             }
             else
             {
-                switch(forward)
+                switch(North)
                 {
                     case -1:
-                        switch(left)
+                        switch(West)
                         {
                             case -1:
-                                dir = dir.rotateRight().rotateRight().rotateRight();
+                                dir = Direction.SOUTH_EAST;
                                 break;
                             case 0:
-                                dir = dir.opposite();
+                                dir = Direction.SOUTH;
                                 break;
                             case 1:
-                                dir = dir.rotateLeft().rotateLeft().rotateLeft();
+                                dir = Direction.SOUTH_WEST;
                                 break;
                         }
                         break;
                     case 0:
-                        switch(left)
+                        switch(West)
                         {
                             case -1:
-                                dir = dir.rotateRight().rotateRight();
+                                dir = Direction.EAST;
                                 break;
                             case 0:
                                 dir = Direction.NONE;
                                 break;
                             case 1:
-                                dir = dir.rotateLeft().rotateLeft();
+                                dir = Direction.WEST;
                                 break;
                         }
                         break;
                     case 1:
-                        switch(left)
+                        switch(West)
                         {
                             case -1:
-                                dir = dir.rotateRight();
+                                dir = Direction.NORTH_EAST;
                                 break;
                             case 0:
+                                dir = Direction.NORTH;
                                 break;
                             case 1:
-                                dir = dir.rotateLeft();
+                                dir = Direction.NORTH_WEST;
                                 break;
                         }
                         break;
                 }
+
 
                 try
                 {
@@ -463,8 +461,8 @@ public class Soldier extends MockRobotPlayer
         toReturn[3] = averageAllyY / allyCount;
 //        toReturn[4] = (stdDevEnemyX + stdDevEnemyY) / enemyCount;
 //        toReturn[5] = (stdDevAllyX + stdDevAllyY) / allyCount;
-        toReturn[4] = enemyCount / 10;
-        toReturn[5] = allyCount / 10;
+        toReturn[4] = enemyCount;
+        toReturn[5] = allyCount;
 //        toReturn[8] = rc.getCoreDelay();
 //        toReturn[9] = rc.getWeaponDelay();
 //        for(int k = 0; k < 8; k++)

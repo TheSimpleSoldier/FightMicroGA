@@ -49,6 +49,11 @@ public class Game
                 robotPlayers[j].runTurnEnd();
             }
 
+            if (robotPlayers.length == 0)
+            {
+                break;
+            }
+
 //            map.print();
         }
 
@@ -61,15 +66,15 @@ public class Game
 
     public double[] getTeamResults(int team)
     {
-        double[] results = new double[2];
+        double[] results = new double[1];
 
         if (team == 0)
         {
-            results[0] = 2 * map.getRedSoldierDamageDealt() + map.getRedSoldierTotalHealth();
+            results[0] = map.getRedSoldierDamageDealt() + 2 * map.getRedSoldierTotalHealth();
         }
         else
         {
-            results[1] = 2 * map.getBlueSoldierDamageDealt() + map.getBlueSoldierTotalHealth();
+            results[0] = map.getBlueSoldierDamageDealt() + 2 * map.getBlueSoldierTotalHealth();
         }
 
         return results;

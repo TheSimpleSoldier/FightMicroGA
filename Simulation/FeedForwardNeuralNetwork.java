@@ -343,29 +343,49 @@ public class FeedForwardNeuralNetwork
      */
     public double[] computeFast(double[] inputs)
     {
-        double[] hiddenValues = new double[sizes[1]];
+        int size0 = sizes[0];
+        int size1 = sizes[1];
+        int size2 = sizes[2];
+        double[] hiddenValues = new double[size1];
         double sum;
-        double[] results = new double[sizes[2]];
+        double[] results = new double[size2];
         int i, j;
 
-        for (i = sizes[1]; --i >= 0; )
+        for (i = size1; --i >= 0; )
         {
             sum = biasNum * biasWeightsToHidden[i];
-            for (j = sizes[0]; --j>=0; )
+            for (j = size0; --j>=0; )
             {
                 sum += inputs[j] * weightsToHidden[i][j];
             }
-            hiddenValues[i] = applyActivationFunction(sum, hiddenActivationFunction);
+
+            if (sum < 0.5)
+            {
+                hiddenValues[i] = 0;
+            }
+            else
+            {
+                hiddenValues[i] = 1;
+            }
+//            hiddenValues[i] = applyActivationFunction(sum, hiddenActivationFunction);
         }
 
-        for (i = sizes[2]; --i>=0; )
+        for (i = size2; --i>=0; )
         {
             sum = biasNum * biasWeightsToOutput[i];
-            for (j = sizes[1]; --j>=0; )
+            for (j = size1; --j>=0; )
             {
                 sum += hiddenValues[j] * weightsToOutput[i][j];
             }
-            results[i] = applyActivationFunction(sum, outputActivationFunction);
+            if (sum < 0.5)
+            {
+                results[i] = 0;
+            }
+            else
+            {
+                results[i] = 1;
+            }
+//            results[i] = applyActivationFunction(sum, outputActivationFunction);
         }
 
         return results;

@@ -182,6 +182,8 @@ public class Map
                     break;
                 }
             }
+
+            in.close();
         }
         catch (IOException e)
         {
@@ -234,6 +236,8 @@ public class Map
                     }
                 }
             }
+
+            in.close();
         }
         catch (IOException e)
         {
@@ -470,7 +474,6 @@ public class Map
             }
             else
             {
-//                System.out.println("Health: " + robotPlayer.getHealth());
                 this.blueSoldierTotalHealth += robotPlayer.getHealth();
 //                this.blueSoldierDamageDealt += ((MockRobotController) robotPlayer.getRc()).getTotalDamageDealt();
             }
@@ -493,30 +496,23 @@ public class Map
     {
         MockRobotPlayer player = mapLayout[loc.x][loc.y].getRobotPlayer();
 
-        player.takeDamage(attackAmount);
-
-        if (player.getRc().getTeam() == Team.A)
+        if (player != null)
         {
-            this.blueSoldierDamageDealt += attackAmount;
-        }
-        else
-        {
-            this.redSoldierDamageDealt += attackAmount;
-        }
+            player.takeDamage(attackAmount);
 
-//        System.out.println("New Health: " + player.getHealth());
-        if (player.getHealth() <= 0)
-        {
-//            if (player.getRc().getTeam() == Team.A)
-//            {
-//                this.redSoldierDamageDealt += ((MockRobotController) player.getRc()).getTotalDamageDealt();
-//            }
-//            else
-//            {
-//                this.blueSoldierDamageDealt += ((MockRobotController) player.getRc()).getTotalDamageDealt();
-//            }
+            if (player.getRc().getTeam() == Team.A)
+            {
+                this.blueSoldierDamageDealt += attackAmount;
+            }
+            else
+            {
+                this.redSoldierDamageDealt += attackAmount;
+            }
 
-            mapLayout[loc.x][loc.y].removeRobotPlayer();
+            if (player.getHealth() <= 0)
+            {
+                mapLayout[loc.x][loc.y].removeRobotPlayer();
+            }
         }
     }
 

@@ -15,7 +15,7 @@ public class Main
 
         //runFightSimulation(inputs, inputs);
 
-        double[][] idealWeights = getIdealWeights(20, 100, mutationRate, crossOverRate, mutationAmount);
+        double[][] idealWeights = getIdealWeights(10, 50, mutationRate, crossOverRate, mutationAmount);
 
         System.out.println();
 
@@ -30,12 +30,12 @@ public class Main
 
         verbose = true;
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 2; i++)
         {
             System.out.println("Net is Red:");
-            runFightSimulation(idealWeights, idealWeights, 0, 1, verbose);
+            runFightSimulation(idealWeights, idealWeights, 1, 1, verbose);
             System.out.println("Net is blue");
-            runFightSimulation(idealWeights, idealWeights, 1, 0, verbose);
+            runFightSimulation(idealWeights, idealWeights, 1, 1, verbose);
         }
     }
 
@@ -69,6 +69,9 @@ public class Main
                         double[][] results = runFightSimulation(population[j], population[k], 0, 0, false);
                         totalFitness[j] += results[0][0];
                         totalFitness[k] += results[1][0];
+
+//                        System.out.println("Score for Red: " + results[0][0]);
+//                        System.out.println("Score for Blue: " + results[1][0]);
                     }
                 }
             }
@@ -106,7 +109,7 @@ public class Main
         // bubble sort FTW!!!!
         for (int i = 0; i < fitness.length; i++)
         {
-            for (int j = i; j < fitness.length; j++)
+            for (int j = i+1; j < fitness.length; j++)
             {
                 if (fitness[j] > fitness[i])
                 {
@@ -230,12 +233,24 @@ public class Main
             System.out.println("Simulating a match");
         }
 
-//        System.out.println("team1Inputs.length: " + team1Inputs.length);
-//        System.out.println("team2Inputs.length: " + team2Inputs.length);
-
         Game game = new Game(team1Inputs, team2Inputs, verbose);
 
-        game.runMatch("FightMicroGA/Simulation/simulationMaps/onetower.xml", teamA, teamB);
+        String map = "FightMicroGA/Simulation/simulationMaps/onetower.xml";
+
+//        if (Math.random() < 0.25)
+//        {
+//            map = "FightMicroGA/Simulation/simulationMaps/barren.xml";
+//        }
+//        else if (Math.random() < 0.25)
+//        {
+//            map = "FightMicroGA/Simulation/simulationMaps/divide.xml";
+//        }
+//        else if (Math.random() < 0.25)
+//        {
+//            map = "FightMicroGA/Simulation/simulationMaps/noeffort.xml";
+//        }
+
+        game.runMatch(map, teamA, teamB);
 
         double[][] results = new double[2][];
 
