@@ -12,7 +12,7 @@ public class Soldier extends MockRobotPlayer
     public Soldier(RobotController rc, double[][] weights)
     {
         super(rc, weights);
-        net = new FeedForwardNeuralNetwork(1, new int[]{60, 50, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
+        net = new FeedForwardNeuralNetwork(1, new int[]{18, 50, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
         net.setWeights(weights[0]);
     }
 
@@ -268,18 +268,18 @@ public class Soldier extends MockRobotPlayer
     {
         double enemyCount = 0;
         double allyCount = 0;
-        double[] enemyCounts = new double[21];
-        double[] allyCounts = new double[21];
+//        double[] enemyCounts = new double[21];
+//        double[] allyCounts = new double[21];
         double averageAllyX = 0;
         double averageAllyY = 0;
         double averageEnemyX = 0;
         double averageEnemyY = 0;
 
-        for(int k = 0; k < enemyCounts.length; k++)
-        {
-            enemyCounts[k] = 0;
-            allyCounts[k] = 0;
-        }
+//        for(int k = 0; k < enemyCounts.length; k++)
+//        {
+//            enemyCounts[k] = 0;
+//            allyCounts[k] = 0;
+//        }
 
         for(RobotInfo bot : nearByBots)
         {
@@ -289,72 +289,72 @@ public class Soldier extends MockRobotPlayer
                 averageAllyX += bot.location.x - rc.getLocation().x;
                 averageAllyY += bot.location.y - rc.getLocation().y;
 
-                switch(bot.type)
-                {
-                    case AEROSPACELAB:
-                        allyCounts[0]++;
-                        break;
-                    case BARRACKS:
-                        allyCounts[1]++;
-                        break;
-                    case BASHER:
-                        allyCounts[2]++;
-                        break;
-                    case BEAVER:
-                        allyCounts[3]++;
-                        break;
-                    case COMMANDER:
-                        allyCounts[4]++;
-                        break;
-                    case COMPUTER:
-                        allyCounts[5]++;
-                        break;
-                    case DRONE:
-                        allyCounts[6]++;
-                        break;
-                    case HANDWASHSTATION:
-                        allyCounts[7]++;
-                        break;
-                    case HELIPAD:
-                        allyCounts[8]++;
-                        break;
-                    case HQ:
-                        allyCounts[9]++;
-                        break;
-                    case LAUNCHER:
-                        allyCounts[10]++;
-                        break;
-                    case MINER:
-                        allyCounts[11]++;
-                        break;
-                    case MINERFACTORY:
-                        allyCounts[12]++;
-                        break;
-                    case MISSILE:
-                        allyCounts[13]++;
-                        break;
-                    case SOLDIER:
-                        allyCounts[14]++;
-                        break;
-                    case SUPPLYDEPOT:
-                        allyCounts[15]++;
-                        break;
-                    case TANK:
-                        allyCounts[16]++;
-                        break;
-                    case TANKFACTORY:
-                        allyCounts[17]++;
-                        break;
-                    case TECHNOLOGYINSTITUTE:
-                        allyCounts[18]++;
-                        break;
-                    case TOWER:
-                        allyCounts[19]++;
-                        break;
-                    case TRAININGFIELD:
-                        allyCounts[20]++;
-                        break;
-                }
+//                switch(bot.type)
+//                {
+//                    case AEROSPACELAB:
+//                        allyCounts[0]++;
+//                        break;
+//                    case BARRACKS:
+//                        allyCounts[1]++;
+//                        break;
+//                    case BASHER:
+//                        allyCounts[2]++;
+//                        break;
+//                    case BEAVER:
+//                        allyCounts[3]++;
+//                        break;
+//                    case COMMANDER:
+//                        allyCounts[4]++;
+//                        break;
+//                    case COMPUTER:
+//                        allyCounts[5]++;
+//                        break;
+//                    case DRONE:
+//                        allyCounts[6]++;
+//                        break;
+//                    case HANDWASHSTATION:
+//                        allyCounts[7]++;
+//                        break;
+//                    case HELIPAD:
+//                        allyCounts[8]++;
+//                        break;
+//                    case HQ:
+//                        allyCounts[9]++;
+//                        break;
+//                    case LAUNCHER:
+//                        allyCounts[10]++;
+//                        break;
+//                    case MINER:
+//                        allyCounts[11]++;
+//                        break;
+//                    case MINERFACTORY:
+//                        allyCounts[12]++;
+//                        break;
+//                    case MISSILE:
+//                        allyCounts[13]++;
+//                        break;
+//                    case SOLDIER:
+//                        allyCounts[14]++;
+//                        break;
+//                    case SUPPLYDEPOT:
+//                        allyCounts[15]++;
+//                        break;
+//                    case TANK:
+//                        allyCounts[16]++;
+//                        break;
+//                    case TANKFACTORY:
+//                        allyCounts[17]++;
+//                        break;
+//                    case TECHNOLOGYINSTITUTE:
+//                        allyCounts[18]++;
+//                        break;
+//                    case TOWER:
+//                        allyCounts[19]++;
+//                        break;
+//                    case TRAININGFIELD:
+//                        allyCounts[20]++;
+//                        break;
+//                }
             }
             else
             {
@@ -362,72 +362,72 @@ public class Soldier extends MockRobotPlayer
                 averageEnemyX += bot.location.x - rc.getLocation().x;
                 averageEnemyY += bot.location.y - rc.getLocation().y;
 
-                switch(bot.type)
-                {
-                    case AEROSPACELAB:
-                        enemyCounts[0]++;
-                        break;
-                    case BARRACKS:
-                        enemyCounts[1]++;
-                        break;
-                    case BASHER:
-                        enemyCounts[2]++;
-                        break;
-                    case BEAVER:
-                        enemyCounts[3]++;
-                        break;
-                    case COMMANDER:
-                        enemyCounts[4]++;
-                        break;
-                    case COMPUTER:
-                        enemyCounts[5]++;
-                        break;
-                    case DRONE:
-                        enemyCounts[6]++;
-                        break;
-                    case HANDWASHSTATION:
-                        enemyCounts[7]++;
-                        break;
-                    case HELIPAD:
-                        enemyCounts[8]++;
-                        break;
-                    case HQ:
-                        enemyCounts[9]++;
-                        break;
-                    case LAUNCHER:
-                        enemyCounts[10]++;
-                        break;
-                    case MINER:
-                        enemyCounts[11]++;
-                        break;
-                    case MINERFACTORY:
-                        enemyCounts[12]++;
-                        break;
-                    case MISSILE:
-                        enemyCounts[13]++;
-                        break;
-                    case SOLDIER:
-                        enemyCounts[14]++;
-                        break;
-                    case SUPPLYDEPOT:
-                        enemyCounts[15]++;
-                        break;
-                    case TANK:
-                        enemyCounts[16]++;
-                        break;
-                    case TANKFACTORY:
-                        enemyCounts[17]++;
-                        break;
-                    case TECHNOLOGYINSTITUTE:
-                        enemyCounts[18]++;
-                        break;
-                    case TOWER:
-                        enemyCounts[19]++;
-                        break;
-                    case TRAININGFIELD:
-                        enemyCounts[20]++;
-                        break;
-                }
+//                switch(bot.type)
+//                {
+//                    case AEROSPACELAB:
+//                        enemyCounts[0]++;
+//                        break;
+//                    case BARRACKS:
+//                        enemyCounts[1]++;
+//                        break;
+//                    case BASHER:
+//                        enemyCounts[2]++;
+//                        break;
+//                    case BEAVER:
+//                        enemyCounts[3]++;
+//                        break;
+//                    case COMMANDER:
+//                        enemyCounts[4]++;
+//                        break;
+//                    case COMPUTER:
+//                        enemyCounts[5]++;
+//                        break;
+//                    case DRONE:
+//                        enemyCounts[6]++;
+//                        break;
+//                    case HANDWASHSTATION:
+//                        enemyCounts[7]++;
+//                        break;
+//                    case HELIPAD:
+//                        enemyCounts[8]++;
+//                        break;
+//                    case HQ:
+//                        enemyCounts[9]++;
+//                        break;
+//                    case LAUNCHER:
+//                        enemyCounts[10]++;
+//                        break;
+//                    case MINER:
+//                        enemyCounts[11]++;
+//                        break;
+//                    case MINERFACTORY:
+//                        enemyCounts[12]++;
+//                        break;
+//                    case MISSILE:
+//                        enemyCounts[13]++;
+//                        break;
+//                    case SOLDIER:
+//                        enemyCounts[14]++;
+//                        break;
+//                    case SUPPLYDEPOT:
+//                        enemyCounts[15]++;
+//                        break;
+//                    case TANK:
+//                        enemyCounts[16]++;
+//                        break;
+//                    case TANKFACTORY:
+//                        enemyCounts[17]++;
+//                        break;
+//                    case TECHNOLOGYINSTITUTE:
+//                        enemyCounts[18]++;
+//                        break;
+//                    case TOWER:
+//                        enemyCounts[19]++;
+//                        break;
+//                    case TRAININGFIELD:
+//                        enemyCounts[20]++;
+//                        break;
+//                }
             }
         }
 
@@ -449,7 +449,7 @@ public class Soldier extends MockRobotPlayer
             }
         }
 
-        double[] toReturn = new double[60];
+        double[] toReturn = new double[18];
 
         toReturn[0] = averageEnemyX / enemyCount;
         toReturn[1] = averageEnemyY / enemyCount;
@@ -489,11 +489,11 @@ public class Soldier extends MockRobotPlayer
         }
         for(int k = 0; k < 21; k++)
         {
-            toReturn[k + 18] = enemyCounts[k] / 10;
+//            toReturn[k + 18] = enemyCounts[k] / 10;
         }
         for(int k = 0; k < 21; k++)
         {
-            toReturn[k + 39] = allyCounts[k] / 10;
+//            toReturn[k + 39] = allyCounts[k] / 10;
         }
 
 //        for(int k = 0; k < toReturn.length; k++)

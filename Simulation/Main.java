@@ -15,7 +15,7 @@ public class Main
 
         //runFightSimulation(inputs, inputs);
 
-        double[][] idealWeights = getIdealWeights(10, 100, mutationRate, crossOverRate, mutationAmount);
+        double[][] idealWeights = getIdealWeights(10, 10, mutationRate, crossOverRate, mutationAmount);
 
         System.out.println();
 
@@ -41,7 +41,7 @@ public class Main
 
     public static double[][] getIdealWeights(int popSize, int rounds, double mutationRate, double crossOverRate, double mutationAmount)
     {
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{60, 50, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{18, 50, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
 
         double[][][] population = new double[popSize][][];
 
