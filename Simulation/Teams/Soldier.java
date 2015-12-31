@@ -12,7 +12,7 @@ public class Soldier extends MockRobotPlayer
     public Soldier(RobotController rc, double[][] weights)
     {
         super(rc, weights);
-        net = new FeedForwardNeuralNetwork(1, new int[]{18, 25, 5}, ActivationFunction.STEP, ActivationFunction.STEP);
+        net = new FeedForwardNeuralNetwork(1, new int[]{6, 10, 5}, ActivationFunction.STEP, ActivationFunction.STEP);
         net.setWeights(weights[0]);
     }
 
@@ -26,7 +26,7 @@ public class Soldier extends MockRobotPlayer
         if (rc.getType() == RobotType.SOLDIER)
         {
             // run soldier code
-            RobotInfo[] nearByEnemies = rc.senseNearbyRobots(rc.getType().attackRadiusSquared, rc.getTeam().opponent());
+            RobotInfo[] nearByEnemies = rc.senseNearbyRobots(rc.getType().sensorRadiusSquared, rc.getTeam().opponent());
             RobotInfo[] allBots = rc.senseNearbyRobots(rc.getType().attackRadiusSquared);
 
             //System.out.println(rc.isCoreReady());
@@ -88,6 +88,7 @@ public class Soldier extends MockRobotPlayer
                 }
                 catch(Exception e)
                 {
+                    System.out.println("Failed while trying to move");
                     System.out.println(e);
                 }
             }
@@ -135,7 +136,7 @@ public class Soldier extends MockRobotPlayer
 
             double[] inputs = getInputs(nearByBots, dir);
 
-            double[] output = net.compute(inputs);
+            double[] output = net.computeFast(inputs);
             for(int k = 0; k < output.length; k++)
             {
 //            System.out.print(output[k] + " ");
@@ -167,14 +168,19 @@ public class Soldier extends MockRobotPlayer
             {
                 try
                 {
-                    MapLocation attackSpot = findWeakestEnemy(nearByEnemies).location;
-                    if (rc.canAttackLocation(attackSpot))
+                    RobotInfo weakEnemy = findWeakestEnemy(nearByEnemies);
+                    if (weakEnemy != null)
                     {
-                        rc.attackLocation(attackSpot);
+                        MapLocation attackSpot = weakEnemy.location;
+                        if (rc.canAttackLocation(attackSpot))
+                        {
+                            rc.attackLocation(attackSpot);
+                        }
                     }
                 }
                 catch (Exception e)
                 {
+                    System.out.println("failed when trying to attack");
                     System.out.println(e);
                 }
             }
@@ -449,44 +455,44 @@ public class Soldier extends MockRobotPlayer
             }
         }
 
-        double[] toReturn = new double[18];
+        double[] toReturn = new double[6];
 
         toReturn[0] = averageEnemyX / enemyCount;
         toReturn[1] = averageEnemyY / enemyCount;
         toReturn[2] = averageAllyX / allyCount;
         toReturn[3] = averageAllyY / allyCount;
-        toReturn[4] = (stdDevEnemyX + stdDevEnemyY) / enemyCount;
-        toReturn[5] = (stdDevAllyX + stdDevAllyY) / allyCount;
-        toReturn[6] = enemyCount / 10;
-        toReturn[7] = allyCount / 10;
-        toReturn[8] = rc.getCoreDelay();
-        toReturn[9] = rc.getWeaponDelay();
-        for(int k = 0; k < 8; k++)
-        {
-            TerrainTile tile = rc.senseTerrainTile(rc.getLocation().add(dir));//terrain
-
-            if (tile != null)
-            {
-                switch(tile)
-                {
-                    case NORMAL:
-                        toReturn[k + 10] = .25;
-                        break;
-                    case UNKNOWN:
-                        toReturn[k + 10] = .5;
-                        break;
-                    case VOID:
-                        toReturn[k + 10] = .75;
-                        break;
-                    case OFF_MAP:
-                        toReturn[k + 10] = 1;
-                        break;
-                    default:
-                        toReturn[k + 10] = 0;
-                }
-            }
-            dir = dir.rotateRight();
-        }
+//        toReturn[4] = (stdDevEnemyX + stdDevEnemyY) / enemyCount;
+//        toReturn[5] = (stdDevAllyX + stdDevAllyY) / allyCount;
+        toReturn[4] = enemyCount / 10;
+        toReturn[5] = allyCount / 10;
+//        toReturn[8] = rc.getCoreDelay();
+//        toReturn[9] = rc.getWeaponDelay();
+//        for(int k = 0; k < 8; k++)
+//        {
+//            TerrainTile tile = rc.senseTerrainTile(rc.getLocation().add(dir));//terrain
+//
+//            if (tile != null)
+//            {
+//                switch(tile)
+//                {
+//                    case NORMAL:
+//                        toReturn[k + 10] = .25;
+//                        break;
+//                    case UNKNOWN:
+//                        toReturn[k + 10] = .5;
+//                        break;
+//                    case VOID:
+//                        toReturn[k + 10] = .75;
+//                        break;
+//                    case OFF_MAP:
+//                        toReturn[k + 10] = 1;
+//                        break;
+//                    default:
+//                        toReturn[k + 10] = 0;
+//                }
+//            }
+//            dir = dir.rotateRight();
+//        }
         for(int k = 0; k < 21; k++)
         {
 //            toReturn[k + 18] = enemyCounts[k] / 10;

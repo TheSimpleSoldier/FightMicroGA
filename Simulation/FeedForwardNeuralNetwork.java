@@ -29,6 +29,11 @@ public class FeedForwardNeuralNetwork
     private double biasNum = 1.;
     private double linearSlope = 1.;
 
+    private double[][] weightsToOutput;
+    private double[] biasWeightsToOutput;
+    private double[][] weightsToHidden;
+    private double[] biasWeightsToHidden;
+
     /**
      * Creates the net from a JSON file
      * @param file The file containing the JSON
@@ -151,6 +156,44 @@ public class FeedForwardNeuralNetwork
         }
 
         generateRandomWeights();
+
+        this.weightsToOutput = new double[sizes[2]][sizes[1]];
+        this.biasWeightsToOutput = new double[sizes[2]];
+        this.weightsToHidden = new double[sizes[1]][sizes[0]];
+        this.biasWeightsToHidden = new double[sizes[1]];
+
+        setWeightArrays();
+    }
+
+    public void setWeightArrays()
+    {
+        int i, j;
+
+        for (i = this.weightsToOutput.length; --i >= 0; )
+        {
+            for (j = this.weightsToOutput[i].length; --j >= 0; )
+            {
+                this.weightsToOutput[i][j] = getWeight(1, i, 2, j);
+            }
+        }
+
+        for (i = this.weightsToHidden.length; --i >= 0; )
+        {
+            for (j = this.weightsToHidden[i].length; --j >= 0; )
+            {
+                this.weightsToHidden[i][j] = getWeight(0, i, 1, j);
+            }
+        }
+
+        for (i = this.biasWeightsToOutput.length; --i >= 0; )
+        {
+            this.biasWeightsToOutput[i] = getWeight(-1, 0, 2, i);
+        }
+
+        for (i = this.biasWeightsToHidden.length; --i >= 0; )
+        {
+            this.biasWeightsToHidden[i] = getWeight(-1, 0, 1, i);
+        }
     }
 
     public FeedForwardNeuralNetwork(int hiddenLayers, int[] sizes, ActivationFunction hiddenActivationFunction, ActivationFunction outputActivationFunction, double biasNum, double linearSlope)
@@ -290,6 +333,42 @@ public class FeedForwardNeuralNetwork
         }
 
         return toReturn;
+    }
+
+    /**
+     * This function is heavily bytecode optimized to run the compute function
+     *
+     * @param inputs
+     * @return
+     */
+    public double[] computeFast(double[] inputs)
+    {
+        double[] hiddenValues = new double[sizes[1]];
+        double sum;
+        double[] results = new double[sizes[2]];
+        int i, j;
+
+        for (i = sizes[1]; --i >= 0; )
+        {
+            sum = biasNum * biasWeightsToHidden[i];
+            for (j = sizes[0]; --j>=0; )
+            {
+                sum += inputs[j] * weightsToHidden[i][j];
+            }
+            hiddenValues[i] = applyActivationFunction(sum, hiddenActivationFunction);
+        }
+
+        for (i = sizes[2]; --i>=0; )
+        {
+            sum = biasNum * biasWeightsToOutput[i];
+            for (j = sizes[1]; --j>=0; )
+            {
+                sum += hiddenValues[j] * weightsToOutput[i][j];
+            }
+            results[i] = applyActivationFunction(sum, outputActivationFunction);
+        }
+
+        return results;
     }
 
     /**
@@ -464,5 +543,6 @@ public class FeedForwardNeuralNetwork
     public void setWeights(double[] weights)
     {
         this.weights = weights;
+        setWeightArrays();
     }
 }
