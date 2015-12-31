@@ -5,5 +5,5 @@ package Simulation;
  */
 public enum ActivationFunction
 {
-    LINEAR, LOGISTIC
+    LINEAR, LOGISTIC, STEP
 }

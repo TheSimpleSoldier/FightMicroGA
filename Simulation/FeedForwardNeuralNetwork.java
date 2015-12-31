@@ -1,6 +1,5 @@
 package Simulation;
 
-import Simulation.ActivationFunction;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -395,6 +394,12 @@ public class FeedForwardNeuralNetwork
                 return linearSlope;
             case LOGISTIC:
                 return (Math.pow(Math.E, sum) / Math.pow(Math.pow(Math.E, sum) + 1, 2));
+            case STEP:
+                if(sum < .5)
+                {
+                    return 0;
+                }
+                return 1;
         }
 
         System.out.println("Failed to apply activation function");
