@@ -46,7 +46,7 @@ public class PSO
             // first update all of the particles
             for (int j = 0; j < popSize; j++)
             {
-                currentWeights[i] = updateParticle(currentWeights[i], localBestWeights[i], globalBest);
+                currentWeights[j] = updateParticle(currentWeights[j], localBestWeights[j], globalBest);
             }
 
             // update all of the scores for global and local best
@@ -64,9 +64,24 @@ public class PSO
                 }
             }
 
+            // loop over scores and update local and global best as necessary
+            for (int j = 0; j < popSize; j++)
+            {
+                if (currentFitness[j] > localBestScores[j])
+                {
+                    localBestScores[j] = currentFitness[j];
+                    localBestWeights[j] = currentWeights[j];
+                }
+                if (currentFitness[j] > globalBestScore)
+                {
+                    globalBestScore = currentFitness[j];
+                    globalBest = currentWeights[j];
+                }
+            }
+            System.out.println("Finished round " + i + "of PSO");
         }
 
-        return currentWeights[0];
+        return globalBest;
     }
 
     public double[][] updateParticle(double[][] current, double[][] localBest, double[][] globalBest)

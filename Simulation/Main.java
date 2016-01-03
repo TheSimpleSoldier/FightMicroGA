@@ -12,10 +12,19 @@ public class Main
         double crossOverRate = 0.1;
         double mutationAmount = 0.1;
         boolean verbose = false;
+        double globalScale = 0.1;
+        double localScale = 0.2;
+        double randomScale = 0.3;
+
 
         //runFightSimulation(inputs, inputs);
 
-        double[][] idealWeights = getIdealWeights(10, 50, mutationRate, crossOverRate, mutationAmount);
+        double[][] idealWeights = getIdealWeights(10, 100, mutationRate, crossOverRate, mutationAmount);
+
+        PSO pso = new PSO(globalScale, localScale, randomScale);
+        double[][] idealWeights2 = pso.getBestWeights(100, 10);
+
+        long startTime = System.currentTimeMillis();
 
         System.out.println();
 
@@ -33,10 +42,12 @@ public class Main
         for (int i = 0; i < 2; i++)
         {
             System.out.println("Net is Red:");
-            runFightSimulation(idealWeights, idealWeights, 1, 1, verbose);
+            runFightSimulation(idealWeights, idealWeights2, 0, 0, verbose);
             System.out.println("Net is blue");
-            runFightSimulation(idealWeights, idealWeights, 1, 1, verbose);
+            runFightSimulation(idealWeights2, idealWeights, 0, 0, verbose);
         }
+
+        System.out.println("Run Time: " + (System.currentTimeMillis() - startTime));
     }
 
     public static double[][] getIdealWeights(int popSize, int rounds, double mutationRate, double crossOverRate, double mutationAmount)

@@ -133,6 +133,9 @@ public class Soldier extends MockRobotPlayer
             int North = 0;
             int West = 0;
             boolean fight = false;
+            boolean retreat = false;
+            boolean advance = false;
+            boolean cluster = false;
 
             double[] inputs = getInputs(nearByBots, dir);
 
