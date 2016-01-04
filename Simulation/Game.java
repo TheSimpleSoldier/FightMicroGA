@@ -1,5 +1,7 @@
 package Simulation;
 
+import battlecode.common.Team;
+
 public class Game
 {
     private double[][] team1Inputs;
@@ -54,6 +56,28 @@ public class Game
                 break;
             }
 
+            if (i > 0 && i % 2 == 0)
+            {
+//                map.print();
+            }
+
+            if (i == 199)
+            {
+                for (int j = 0; j < robotPlayers.length; j++)
+                {
+                    if (robotPlayers[j].getRc().getTeam() == Team.A)
+                    {
+                        map.countRedRobot(robotPlayers[j]);
+                    }
+                    else
+                    {
+                        map.countBlueRobot(robotPlayers[j]);
+                    }
+                }
+
+                break;
+            }
+
 //            map.print();
         }
 
@@ -70,11 +94,11 @@ public class Game
 
         if (team == 0)
         {
-            results[0] = map.getRedSoldierDamageDealt() + 2 * map.getRedSoldierTotalHealth();
+            results[0] = map.getRedSoldierDamageDealt() + 3 * map.getRedSoldierTotalHealth();
         }
         else
         {
-            results[0] = map.getBlueSoldierDamageDealt() + 2 * map.getBlueSoldierTotalHealth();
+            results[0] = map.getBlueSoldierDamageDealt() + 3 * map.getBlueSoldierTotalHealth();
         }
 
         return results;

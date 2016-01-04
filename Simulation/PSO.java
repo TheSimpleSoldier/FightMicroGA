@@ -57,7 +57,7 @@ public class PSO
                     // run match and record scores
                     if (j != k)
                     {
-                        double[][] results = Main.runFightSimulation(currentWeights[j], currentWeights[k], 0, 0, false);
+                        double[][] results = Main.runFightSimulation(currentWeights[j], currentWeights[k], 0, 0, false, i);
                         currentFitness[j] += results[0][0];
                         currentFitness[k] += results[1][0];
                     }
@@ -78,7 +78,7 @@ public class PSO
                     globalBest = currentWeights[j];
                 }
             }
-            System.out.println("Finished round " + i + "of PSO");
+            System.out.println("Finished round " + i + " of PSO");
         }
 
         return globalBest;
