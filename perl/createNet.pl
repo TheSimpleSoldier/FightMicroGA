@@ -54,7 +54,7 @@ for($k = 0; $k < $middle; $k++)
         $index = 0;
         for($a = 0; $a < $t; $a++)
         {
-            $index += $input;
+            $index += $middle;
         }
 
         $index += $k;
@@ -78,7 +78,7 @@ for($k = 0; $k < $output; $k++)
         $index = $input * $middle;
         for($a = 0; $a < $t; $a++)
         {
-            $index += $middle;
+            $index += $output;
         }
 
         $index += $k;

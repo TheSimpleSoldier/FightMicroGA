@@ -10,6 +10,7 @@ public class Soldier extends MockRobotPlayer
     public Soldier(RobotController rc, double[][] weights)
     {
         super(rc, weights);
+        System.out.println(weights[0].length);
         net = new MinFeedForwardNeuralNetwork(weights[0]);
     }
 
