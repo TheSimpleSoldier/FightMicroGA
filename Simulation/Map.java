@@ -1,5 +1,6 @@
 package Simulation;
 
+import Simulation.Teams.Advanced;
 import Simulation.Teams.Soldier;
 import Simulation.Teams.team044;
 import battlecode.common.*;
@@ -191,7 +192,7 @@ public class Map
         }
 
 
-        return new int[] {width, height};
+        return new int[] {height, width};
     }
 
     /**
@@ -230,6 +231,7 @@ public class Map
                     }
                     else
                     {
+//                        System.out.println("we are gathering data");
                         String[] row = x.split(" ");
                         mapLocations[index] = row;
                         index++;
@@ -302,6 +304,10 @@ public class Map
                         {
                             robotPlayer = new team044(robotController, weights1);
                         }
+                        else if (teamA == 2)
+                        {
+                            robotPlayer = new Advanced(robotController, weights1);
+                        }
                         else
                         {
                             robotPlayer = new Soldier(robotController, weights1);
@@ -312,6 +318,10 @@ public class Map
                         if (teamB == 1)
                         {
                             robotPlayer = new team044(robotController, weights2);
+                        }
+                        else if (teamB == 2)
+                        {
+                            robotPlayer = new Advanced(robotController, weights2);
                         }
                         else
                         {
@@ -480,6 +490,16 @@ public class Map
 
 //            System.out.println("Player removed from game");
         }
+    }
+
+    public void countRedRobot(MockRobotPlayer robotPlayer)
+    {
+        this.redSoldierTotalHealth += robotPlayer.getHealth();
+    }
+
+    public void countBlueRobot(MockRobotPlayer robotPlayer)
+    {
+        this.blueSoldierTotalHealth += robotPlayer.getHealth();
     }
 
 

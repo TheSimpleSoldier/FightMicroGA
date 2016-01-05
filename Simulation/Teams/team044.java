@@ -46,29 +46,43 @@ public class team044 extends MockRobotPlayer {
      */
     public void move(MapLocation target) {
         Direction dir = getDir(target);
-        //System.out.println(dir);
-
-        if (rc.canMove(dir)) {
-            try {
-                //System.out.println("Moving: " + dir + " On team: " + rc.getTeam());
-                //System.out.println(rc.getLocation());
+        try
+        {
+            if (rc.canMove(dir)) {
                 rc.move(dir);
-                //System.out.println(rc.getLocation());
-                //System.out.println();
-            } catch (Exception e) {
-                System.out.println("Failed to move");
-                e.printStackTrace();
+            }
+            else if (rc.canMove(dir.rotateRight()))
+            {
+                rc.move(dir.rotateRight());
+            }
+            else if (rc.canMove(dir.rotateLeft()))
+            {
+                rc.move(dir.rotateLeft());
+            }
+            else if (rc.canMove(dir.rotateLeft().rotateLeft()))
+            {
+                rc.move(dir.rotateLeft().rotateLeft());
+            }
+            else if (rc.canMove(dir.rotateRight().rotateRight()))
+            {
+                rc.move(dir.rotateRight().rotateRight());
+            }
+            else if (rc.canMove(dir.rotateLeft().rotateLeft().rotateLeft()))
+            {
+                rc.move(dir.rotateLeft().rotateLeft().rotateLeft());
+            }
+            else if (rc.canMove(dir.rotateRight().rotateRight().rotateRight()))
+            {
+                rc.move(dir.rotateRight().rotateRight().rotateRight());
+            }
+            else if (rc.canMove(dir.opposite()))
+            {
+                rc.move(dir.opposite());
             }
         }
-
-        for (int i = 0; i < dirs.length; i++) {
-            if (dirs[i] != Direction.OMNI && dirs[i] != Direction.NONE && rc.canMove(dirs[i])) {
-                try {
-                    rc.move(dirs[i]);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
+        catch (Exception e) {
+            System.out.println("Failed to move");
+            e.printStackTrace();
         }
     }
 

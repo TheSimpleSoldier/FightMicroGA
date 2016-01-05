@@ -12,18 +12,32 @@ public class Main
         double crossOverRate = 0.1;
         double mutationAmount = 0.1;
         boolean verbose = false;
+        double globalScale = 0.1;
+        double localScale = 0.2;
+        double randomScale = 0.3;
+
 
         //runFightSimulation(inputs, inputs);
 
-        double[][] idealWeights = getIdealWeights(10, 50, mutationRate, crossOverRate, mutationAmount);
+//        System.out.println("Basic vs. Advanced");
+//        runFightSimulation(null, null, 1, 2, true, 2);
+//        System.out.println("Advanced vs. Basic");
+//        runFightSimulation(null, null, 2, 1, true, 2);
+
+        double[][] idealWeights = getIdealWeights(10, 1, mutationRate, crossOverRate, mutationAmount);
+
+        PSO pso = new PSO(globalScale, localScale, randomScale);
+        double[][] idealWeights2 = pso.getBestWeights(200, 10);
+
+        long startTime = System.currentTimeMillis();
 
         System.out.println();
 
-        for (int i = 0; i < idealWeights.length; i++)
+        for (int i = 0; i < idealWeights2.length; i++)
         {
-            for (int j = 0; j < idealWeights[i].length; j++)
+            for (int j = 0; j < idealWeights2[i].length; j++)
             {
-                System.out.print(idealWeights[i][j] + ", ");
+                System.out.print(idealWeights2[i][j] + ", ");
             }
             System.out.println();
         }
@@ -33,15 +47,25 @@ public class Main
         for (int i = 0; i < 2; i++)
         {
             System.out.println("Net is Red:");
-            runFightSimulation(idealWeights, idealWeights, 1, 1, verbose);
+            runFightSimulation(idealWeights, idealWeights2, 0, 0, verbose, 1);
             System.out.println("Net is blue");
-            runFightSimulation(idealWeights, idealWeights, 1, 1, verbose);
+            runFightSimulation(idealWeights2, idealWeights, 0, 0, verbose, 1);
+            System.out.println("Net vs. basic");
+            runFightSimulation(idealWeights, idealWeights, 0, 1, verbose, 1);
+            System.out.println("basic vs. Net");
+            runFightSimulation(idealWeights, idealWeights, 1, 0, verbose, 1);
+            System.out.println("PSO vs. basic");
+            runFightSimulation(idealWeights2, idealWeights2, 0, 1, verbose, 1);
+            System.out.println("basic vs. PSO");
+            runFightSimulation(idealWeights2, idealWeights2, 1, 0, verbose, 1);
         }
+
+        System.out.println("Run Time: " + (System.currentTimeMillis() - startTime));
     }
 
     public static double[][] getIdealWeights(int popSize, int rounds, double mutationRate, double crossOverRate, double mutationAmount)
     {
-        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{6, 10, 5}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
+        FeedForwardNeuralNetwork net = new FeedForwardNeuralNetwork(1, new int[]{6, 10, 4}, ActivationFunction.LOGISTIC, ActivationFunction.LOGISTIC);
 
         double[][][] population = new double[popSize][][];
 
@@ -66,7 +90,7 @@ public class Main
                 {
                     if (j != k)
                     {
-                        double[][] results = runFightSimulation(population[j], population[k], 0, 0, false);
+                        double[][] results = runFightSimulation(population[j], population[k], 0, 0, false, i);
                         totalFitness[j] += results[0][0];
                         totalFitness[k] += results[1][0];
 
@@ -226,7 +250,7 @@ public class Main
      * @param team2Inputs
      * @return
      */
-    public static double[][] runFightSimulation(double[][] team1Inputs, double[][] team2Inputs, int teamA, int teamB, boolean verbose)
+    public static double[][] runFightSimulation(double[][] team1Inputs, double[][] team2Inputs, int teamA, int teamB, boolean verbose, int round)
     {
         if (verbose)
         {
@@ -237,15 +261,15 @@ public class Main
 
         String map = "FightMicroGA/Simulation/simulationMaps/onetower.xml";
 
-//        if (Math.random() < 0.25)
-//        {
-//            map = "FightMicroGA/Simulation/simulationMaps/barren.xml";
-//        }
-//        else if (Math.random() < 0.25)
-//        {
-//            map = "FightMicroGA/Simulation/simulationMaps/divide.xml";
-//        }
-//        else if (Math.random() < 0.25)
+        if (round % 4 == 1)
+        {
+            map = "FightMicroGA/Simulation/simulationMaps/barren.xml";
+        }
+        else if (round % 4 == 2)
+        {
+            map = "FightMicroGA/Simulation/simulationMaps/frontlines.xml";
+        }
+//        else if (round % 4 == 3)
 //        {
 //            map = "FightMicroGA/Simulation/simulationMaps/noeffort.xml";
 //        }
