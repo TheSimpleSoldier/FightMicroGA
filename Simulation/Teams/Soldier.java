@@ -1,19 +1,16 @@
 package Simulation.Teams;
 
-import Simulation.ActivationFunction;
-import Simulation.FeedForwardNeuralNetwork;
+import Simulation.MinFeedForwardNeuralNetwork;
 import Simulation.MockRobotPlayer;
-import battlecode.common.RobotController;
 import battlecode.common.*;
 
 public class Soldier extends MockRobotPlayer
 {
-    FeedForwardNeuralNetwork net;
+    MinFeedForwardNeuralNetwork net;
     public Soldier(RobotController rc, double[][] weights)
     {
         super(rc, weights);
-        net = new FeedForwardNeuralNetwork(1, new int[]{6, 10, 5}, ActivationFunction.STEP, ActivationFunction.STEP);
-        net.setWeights(weights[0]);
+        net = new MinFeedForwardNeuralNetwork(weights[0]);
     }
 
     public void run()
